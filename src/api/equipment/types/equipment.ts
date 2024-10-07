@@ -3,7 +3,8 @@ export interface EquipmentRequestData {
   equipmentName?: string
   consumption?: number // 价格
   attributeExpression?: string // 属性加成表达式
-  subEquips?: string
+  subEquips?: Array<string>
+  subEquipsModel?: string
   equipmentImg?: string
 
   type?: number

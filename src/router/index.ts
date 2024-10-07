@@ -158,6 +158,15 @@ export const constantRoutes: RouteRecordRaw[] = [
         }
       },
       {
+        path: "skill",
+        component: () => import("@/views/table/skill/index.vue"),
+        name: "SkillMge",
+        meta: {
+          title: "技能管理",
+          keepAlive: true
+        }
+      },
+      {
         path: "element-plus",
         component: () => import("@/views/table/element-plus/index.vue"),
         name: "ElementPlus",
