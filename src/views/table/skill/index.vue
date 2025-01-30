@@ -18,9 +18,15 @@ const { paginationData, handleCurrentChange, handleSizeChange } = usePagination(
 //#region 增
 const DEFAULT_FORM_DATA: SkillRequestData = {
   skillId: undefined,
+  skillLevel: 1,
   skillName: "",
   skillImg: "",
   skillType: undefined,
+  skillConsumption: "100",
+  skillCd: "100",
+  skillCheckAndDo: "0",
+  skillCastPoint: "0.1",
+  skillCastPointAfter: "0.1",
 }
 const dialogVisible = ref<boolean>(false)
 const formRef = ref<FormInstance | null>(null)
@@ -79,7 +85,7 @@ const searchFormRef = ref<FormInstance | null>(null)
 const searchData = reactive({
   skillId: 0,
   skillName: "",
-  type: 1
+  skillType: 1
 })
 const getTableData = () => {
   loading.value = true
@@ -180,11 +186,29 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getTabl
       width="30%"
     >
       <el-form ref="formRef" :model="formData" :rules="formRules" label-width="100px" label-position="left">
+        <el-form-item prop="skillLevel" label="技能等级">
+          <el-input v-model="formData.skillLevel" placeholder="请输入" />
+        </el-form-item>
         <el-form-item prop="skillName" label="技能名">
           <el-input v-model="formData.skillName" placeholder="请输入" />
         </el-form-item>
-        <el-form-item prop="skillImg" label="技能图片" v-if="formData.skillId === undefined">
+        <el-form-item prop="skillImg" label="技能图片">
           <el-input v-model="formData.skillImg" placeholder="请上传" />
+        </el-form-item>
+        <el-form-item prop="skillConsumption" label="技能消耗">
+          <el-input v-model="formData.skillConsumption" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item prop="skillCd" label="冷却时间">
+          <el-input v-model="formData.skillCd" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item prop="skillCheckAndDo" label="技能详情">
+          <el-input v-model="formData.skillCheckAndDo"/>
+        </el-form-item>
+        <el-form-item prop="skillCastPoint" label="前摇">
+          <el-input v-model="formData.skillCastPoint"/>
+        </el-form-item>
+        <el-form-item prop="skillCastPointAfter" label="后摇">
+          <el-input v-model="formData.skillCastPointAfter"/>
         </el-form-item>
       </el-form>
       <template #footer>
