@@ -6,6 +6,7 @@ import { type FormInstance, type FormRules, ElMessage, ElMessageBox } from "elem
 import { Search, Refresh, CirclePlus, Delete, Download, RefreshRight } from "@element-plus/icons-vue"
 import { usePagination } from "@/hooks/usePagination"
 import { cloneDeep } from "lodash-es"
+import ConditionEditor from "@/components/ConditionEditor/index.vue"
 
 defineOptions({
   // 命名当前组件
@@ -26,11 +27,32 @@ const DEFAULT_FORM_DATA: SkillRequestData = {
   skillCd: "100",
   skillCheckAndDo: "0",
   skillCastPoint: "0.1",
-  skillCastPointAfter: "0.1",
+  skillCastPointAfter: "0.1"
 }
 const dialogVisible = ref<boolean>(false)
 const formRef = ref<FormInstance | null>(null)
-const formData = ref<SkillRequestData>(cloneDeep(DEFAULT_FORM_DATA))
+const formData = ref<
+  SkillRequestData & {
+    conditions: Array<{
+      conditions: Array<{
+        variable: string
+        operator: string
+        value: string
+        logic?: string
+      }>
+      actions: Array<{
+        property: string
+        expression: string
+        value: string
+      }>
+    }>
+  }
+>(
+  cloneDeep({
+    ...DEFAULT_FORM_DATA,
+    conditions: []
+  })
+)
 const formRules: FormRules<SkillRequestData> = {
   skillName: [{ required: true, trigger: "blur", message: "请输入技能名" }],
   skillImg: [{ required: false, trigger: "blur", message: "请上传技能图片" }]
@@ -53,7 +75,10 @@ const handleCreateOrUpdate = () => {
 }
 const resetForm = () => {
   formRef.value?.clearValidate()
-  formData.value = cloneDeep(DEFAULT_FORM_DATA)
+  formData.value = cloneDeep({
+    ...DEFAULT_FORM_DATA,
+    conditions: []
+  })
 }
 //#endregion
 
@@ -94,7 +119,7 @@ const getTableData = () => {
     // size: paginationData.pageSize,
     skillId: searchData.skillId || undefined,
     skillName: searchData.skillName || "",
-    skillType: searchData.skillType || undefined,
+    skillType: searchData.skillType || undefined
   })
     .then(({ data }) => {
       paginationData.total = data.total
@@ -155,7 +180,7 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getTabl
         <el-table :data="tableData">
           <el-table-column type="selection" width="50" align="center" />
           <el-table-column prop="skillImg" label="图标" align="center" />
-          <el-table-column prop="skillId" label="技能id" align="center"/>
+          <el-table-column prop="skillId" label="技能id" align="center" />
           <el-table-column prop="skillName" label="技能名称" align="center" />
           <el-table-column fixed="right" label="操作" width="150" align="center">
             <template #default="scope">
@@ -201,14 +226,15 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getTabl
         <el-form-item prop="skillCd" label="冷却时间">
           <el-input v-model="formData.skillCd" placeholder="请输入" />
         </el-form-item>
+        <!-- 一个高级组件，可以新增，删除 -->
         <el-form-item prop="skillCheckAndDo" label="技能详情">
-          <el-input v-model="formData.skillCheckAndDo"/>
+          <condition-editor v-model="formData.conditions" />
         </el-form-item>
         <el-form-item prop="skillCastPoint" label="前摇">
-          <el-input v-model="formData.skillCastPoint"/>
+          <el-input v-model="formData.skillCastPoint" />
         </el-form-item>
         <el-form-item prop="skillCastPointAfter" label="后摇">
-          <el-input v-model="formData.skillCastPointAfter"/>
+          <el-input v-model="formData.skillCastPointAfter" />
         </el-form-item>
       </el-form>
       <template #footer>
