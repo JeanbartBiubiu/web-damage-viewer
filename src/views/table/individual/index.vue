@@ -17,6 +17,7 @@ import { type FormInstance, type FormRules, ElMessage, ElMessageBox } from "elem
 import { Search, Refresh, CirclePlus, Delete, Download, RefreshRight } from "@element-plus/icons-vue"
 import { usePagination } from "@/hooks/usePagination"
 import { cloneDeep, update } from "lodash-es"
+import UploadImg64 from '@/components/UploadImg64/index.vue';
 
 defineOptions({
   // 命名当前组件
@@ -283,6 +284,9 @@ const resetSearch = () => {
   searchFormRef.value?.resetFields()
   handleSearch()
 }
+const updateImg = (img: string) => {
+  formData.value.indivImg = img
+}
 //#endregion
 
 /** 监听分页参数的变化 */
@@ -309,7 +313,11 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getTabl
       <div class="table-wrapper">
         <el-table :data="tableData">
           <el-table-column type="selection" width="50" align="center" />
-          <el-table-column prop="indivImg" label="角色图片" align="center" />
+          <el-table-column prop="indivImg" width="128" label="角色图片" align="center">
+            <template #default="scope">
+              <img :src="scope.row.indivImg" alt="" width="50" height="50" />
+            </template>
+          </el-table-column>
           <el-table-column prop="indivId" label="角色id" align="center" />
           <el-table-column prop="indivName" label="角色名称" align="center" />
           <el-table-column fixed="right" label="操作" width="350" align="center">
@@ -344,6 +352,9 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getTabl
       width="30%"
     >
       <el-form ref="formRef" :model="formData" :rules="formRules" label-width="100px" label-position="left">
+        <el-form-item prop="indivImg" label="头像">
+          <UploadImg64 :img="formData.indivImg" @update:img="updateImg"/>
+        </el-form-item>
         <el-form-item prop="indivName" label="角色名">
           <el-input v-model="formData.indivName" placeholder="请输入" />
         </el-form-item>

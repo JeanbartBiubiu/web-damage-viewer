@@ -187,6 +187,27 @@ export const constantRoutes: RouteRecordRaw[] = [
     ]
   },
   {
+    path: "/example",
+    component: Layouts,
+    redirect: "/example",
+    name: "Example",
+    meta: {
+      title: "测试新功能",
+      svgIcon: "example"
+    },
+    children: [
+      {
+        path: "torch",
+        component: () => import("@/views/example/torch/index.vue"),
+        name: "Torch",
+        meta: {
+          title: "图片处理",
+          keepAlive: true
+        }
+      }
+    ]
+  },
+  {
     path: "/menu",
     component: Layouts,
     redirect: "/menu/menu1",
