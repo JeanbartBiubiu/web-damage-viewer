@@ -1,6 +1,7 @@
 <template>
   <div>
     <button @click="resizeImage">调整图片大小</button>
+    <button @click="testPower">测试性能</button>
     <img ref="originalImageRef" :src="originalImageUrl" alt="Original Image" />
     <img ref="resizedImageRef" :src="resizedImageUrl" alt="Resized Image" />
   </div>
@@ -33,6 +34,45 @@ const resizeImage = async () => {
     console.error('图片调整大小出错:', error);
   }
 };
+
+
+// 定义 testPower 函数
+function testPower() {
+  // 记录开始时间
+  const startTime = Date.now();
+  const limit = 100000000;
+  // 创建一个布尔数组，初始值都设为 true，表示都是质数
+  const isPrime = new Array(limit + 1).fill(true);
+  // 0 和 1 不是质数
+  isPrime[0] = false;
+  isPrime[1] = false;
+
+  // 直线筛算法
+  for (let i = 2; i * i <= limit; i++) {
+    if (isPrime[i]) {
+      for (let j = i * i; j <= limit; j += i) {
+        isPrime[j] = false;
+      }
+    }
+  }
+
+  // 统计质数的数量
+  let primeCount = 0;
+  for (let i = 2; i <= limit; i++) {
+    if (isPrime[i]) {
+      primeCount++;
+    }
+  }
+
+  // 记录结束时间
+  const endTime = Date.now();
+  // 计算执行时间
+  const executionTime = endTime - startTime;
+  // 打印执行时间
+  console.log("执行时间: " + executionTime + " 毫秒");
+  return primeCount;
+}
+
 </script>
 
 <style scoped>

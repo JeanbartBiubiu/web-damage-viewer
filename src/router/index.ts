@@ -204,6 +204,15 @@ export const constantRoutes: RouteRecordRaw[] = [
           title: "图片处理",
           keepAlive: true
         }
+      },
+      {
+        path: "wasm",
+        component: () => import("@/views/example/wasm/index.vue"),
+        name: "Wasm",
+        meta: {
+          title: "wasm性能测试",
+          keepAlive: true
+        }
       }
     ]
   },
