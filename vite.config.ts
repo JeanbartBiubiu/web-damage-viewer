@@ -34,12 +34,12 @@ export default ({ mode }: ConfigEnv): UserConfigExport => {
       strictPort: false,
       /** 接口代理 */
       proxy: {
-        "/api/v1": {
+        "/api": {
           target: "http://127.0.0.1:8888",
           ws: true,
           /** 是否允许跨域 */
           changeOrigin: true,
-          rewrite: (path) => path.replace("/api/v1", ""),
+          rewrite: (path) => path.replace("/api", ""),
           headers: {
             host: '***', // 和转发url一样 host不带协议头 origin带上
             origin: 'http://***'

@@ -27,7 +27,8 @@ export interface GetEquipmentData {
   equipmentImg: string
   consumption: number
   attributeExpression: string
-  subEquips: string
+  subEquips: string[]
+  subEquipsModel: string
   type: number
 }
 
