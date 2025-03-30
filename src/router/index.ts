@@ -62,6 +62,36 @@ export const constantRoutes: RouteRecordRaw[] = [
     ]
   },
   {
+    path: "/global",
+    component: Layouts,
+    redirect: "/global",
+    name: "Gloabl",
+    meta: {
+      title: "全局设置",
+      elIcon: "Grid"
+    },
+    children: [
+      {
+        path: "selectGame",
+        component: () => import("@/views/global/selectGame/index.vue"),
+        name: "SelectGame",
+        meta: {
+          title: "选择游戏",
+          keepAlive: true
+        }
+      },
+      {
+        path: "token",
+        component: () => import("@/views/global/token/index.vue"),
+        name: "SetToken",
+        meta: {
+          title: "token设置",
+          keepAlive: true
+        }
+      },
+    ]
+  },
+  {
     path: "/table",
     component: Layouts,
     redirect: "/table/element-plus",

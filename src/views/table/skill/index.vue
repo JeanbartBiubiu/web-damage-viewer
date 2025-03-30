@@ -6,7 +6,7 @@ import { type FormInstance, type FormRules, ElMessage, ElMessageBox } from "elem
 import { Search, Refresh, CirclePlus, Delete, Download, RefreshRight } from "@element-plus/icons-vue"
 import { usePagination } from "@/hooks/usePagination"
 import { cloneDeep } from "lodash-es"
-import ConditionEditor from "@/components/ConditionEditor/index.vue"
+//import ConditionEditor from "@/components/ConditionEditor/index.vue"
 
 defineOptions({
   // 命名当前组件
@@ -100,7 +100,20 @@ const handleDelete = (row: GetSkillData) => {
 //#region 改
 const handleUpdate = (row: GetSkillData) => {
   dialogVisible.value = true
-  formData.value = cloneDeep(row)
+  formData.value = {
+    ...cloneDeep(DEFAULT_FORM_DATA),
+    skillId: row.skillId,
+    skillLevel: row.skillLevel,
+    skillName: row.skillName,
+    skillImg: row.skillImg,
+    skillType: row.skillType,
+    skillConsumption: row.skillConsumption,
+    skillCd: row.skillCd,
+    skillCheckAndDo: row.skillCheckAndDo,
+    skillCastPoint: row.skillCastPoint,
+    skillCastPointAfter: row.skillCastPointAfter,
+    conditions: [] // 假设没有默认的 conditions 数据
+  }
 }
 //#endregion
 

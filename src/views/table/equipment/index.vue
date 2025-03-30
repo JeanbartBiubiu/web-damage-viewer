@@ -69,7 +69,16 @@ const handleDelete = (row: GetEquipmentData) => {
 //#region 改
 const handleUpdate = (row: GetEquipmentData) => {
   dialogVisible.value = true
-  formData.value = cloneDeep(row)
+  formData.value = {
+    equipmentId: row.equipmentId,
+    equipmentName: row.equipmentName,
+    consumption: row.consumption,
+    attributeExpression: row.attributeExpression,
+    subEquips: row.subEquips,
+    subEquipsModel: row.subEquipsModel,
+    equipmentImg: row.equipmentImg,
+    type: row.type
+  }
 }
 //#endregion
 

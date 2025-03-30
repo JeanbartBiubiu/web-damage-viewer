@@ -64,16 +64,18 @@ const settingValues = () => {
   // 将list转换为后端要的结构
   settingTableListValue.value.forEach(item => {
       for (let index = 1; index <= 50; index++) {
-        if (item['value'+index] == undefined) {
+        if (item[`value${index}`] == undefined) {
           break;
         }
         var tempObject = {
             indivId: indivId.value,
             attributeId: item.attributeId,
             levelId: index,
-            value: item['value'+index]
+            value: item[`value${index}`]
+        } as GetIndivAttributeValueData;
+        if (tempArray.value) {
+          tempArray.value.push(tempObject)
         }
-        tempArray.value.push(tempObject)
       }
   });
     settingIndivAttrValues(tempArray.value)

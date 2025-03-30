@@ -38,56 +38,7 @@ export interface GetIndivAttributeValueData {
 export interface IndivAttributeValueHolisticData {
   attributeId?: number
   attributeName?: string
-  value1?: number
-  value2?: number
-  value3?: number
-  value4?: number
-  value5?: number
-  value6?: number
-  value7?: number
-  value8?: number
-  value9?: number
-  value10?: number
-  value11?: number
-  value12?: number
-  value13?: number
-  value14?: number
-  value15?: number
-  value16?: number
-  value17?: number
-  value18?: number
-  value19?: number
-  value20?: number
-  value21?: number
-  value22?: number
-  value23?: number
-  value24?: number
-  value25?: number
-  value26?: number
-  value27?: number
-  value28?: number
-  value29?: number
-  value30?: number
-  value31?: number
-  value32?: number
-  value33?: number
-  value34?: number
-  value35?: number
-  value36?: number
-  value37?: number
-  value38?: number
-  value39?: number
-  value40?: number
-  value41?: number
-  value42?: number
-  value43?: number
-  value44?: number
-  value45?: number
-  value46?: number
-  value47?: number
-  value48?: number
-  value49?: number
-  value50?: number
+  [key: `value${number}`]: number;
 }
 
 export function settingHolisticValue(index: number,value: number,item: IndivAttributeValueHolisticData) {
