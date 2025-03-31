@@ -3,7 +3,9 @@ const VITE_APP_TITLE = import.meta.env.VITE_APP_TITLE
 </script>
 
 <template>
-  <footer class="layout-footer">MIT © 2021-PRESENT {{ VITE_APP_TITLE }}</footer>
+  <footer class="layout-footer">
+    <a href="https://beian.miit.gov.cn/" target="_blank">粤ICP备2025393185号-1</a>
+  </footer>
 </template>
 
 <style lang="scss" scoped>

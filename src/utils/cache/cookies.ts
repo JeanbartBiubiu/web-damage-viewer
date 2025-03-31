@@ -7,8 +7,6 @@ export const getCurrentSchema = () => {
 }
 
 export const setToken = (token: string) => {
-  Cookies.set(CacheKey.TOKEN, token)
 }
 export const removeToken = () => {
-  Cookies.remove(CacheKey.TOKEN)
 }
