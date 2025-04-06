@@ -154,24 +154,6 @@ export const constantRoutes: RouteRecordRaw[] = [
           title: "技能管理",
           keepAlive: true
         }
-      },
-      {
-        path: "element-plus",
-        component: () => import("@/views/table/element-plus/index.vue"),
-        name: "ElementPlus",
-        meta: {
-          title: "Element Plus",
-          keepAlive: true
-        }
-      },
-      {
-        path: "vxe-table",
-        component: () => import("@/views/table/vxe-table/index.vue"),
-        name: "VxeTable",
-        meta: {
-          title: "Vxe Table",
-          keepAlive: true
-        }
       }
     ]
   },

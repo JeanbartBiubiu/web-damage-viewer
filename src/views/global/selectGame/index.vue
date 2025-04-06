@@ -3,8 +3,13 @@
     <el-card>
       <el-form>
         <el-form-item label="选择游戏">
-          <el-select filterable="true" v-model="selectedGame" placeholder="请选择游戏" style="width: 300px">
-            <el-option v-for="game in gameList" :key="game.gameCode" :label="game.gameName" :value="game.gameCode" />
+          <el-select :filterable="true" v-model="selectedGame" placeholder="请选择游戏" style="width: 300px">
+            <el-option
+              v-for="game in gameList"
+              :key="game.gameCode"
+              :label="game.gameName"
+              :value="game.gameCode ?? ''"
+            />
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -18,20 +23,15 @@
 <script lang="ts" setup>
 import { ref } from "vue"
 import { ElMessage } from "element-plus"
-import { getGameInfo } from "@/api/game"
-
-interface GameInfo {
-  gameId: number
-  gameCode: string
-  gameName: string
-}
+import { GameInfo, GameInfoResponse, getGameInfo } from "@/api/game"
 
 const gameList = ref<GameInfo[]>([])
 const selectedGame = ref("")
 
 const getGameOption = () => {
   getGameInfo()
-    .then(({ data }) => {
+    // 指定响应数据的类型
+    .then(({ data }: { data: GameInfoResponse }) => {
       gameList.value = data.list
       const savedGame = localStorage.getItem("currentSchema")
       if (savedGame) {
@@ -39,7 +39,8 @@ const getGameOption = () => {
       }
     })
     .catch(() => {
-      tableData.value = []
+      // 这里应该是 gameList.value = []，而不是 tableData.value = []
+      gameList.value = []
       ElMessage.error("获取游戏列表失败")
     })
 }
