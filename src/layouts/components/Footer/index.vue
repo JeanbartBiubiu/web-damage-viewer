@@ -9,7 +9,7 @@ const VITE_APP_TITLE = import.meta.env.VITE_APP_TITLE
     </p>
     <p>
       <img src="https://beian.mps.gov.cn/img/logo01.dd7ff50e.png" width="20" />
-      <a href="https://beian.mps.gov.cn/#/query/webSearch?code=1111111" rel="noreferrer" target="_blank"
+      <a href="https://beian.mps.gov.cn/#/query/webSearch?code=44030002006529" rel="noreferrer" target="_blank"
         >粤公网安备44030002006529号</a
       >
     </p>
