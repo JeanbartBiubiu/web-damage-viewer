@@ -7,32 +7,30 @@
     :show-file-list="false"
     :on-change="handleUpload"
   >
-    <img v-if="imageUrl" :src="imageUrl" class="avatar"/>
+    <img v-if="imageUrl" :src="imageUrl" class="avatar" />
     <el-icon v-else class="avatar-uploader-icon">
-      <Plus/>
+      <Plus />
     </el-icon>
   </el-upload>
 </template>
 
 <script lang="ts" setup>
-import {ref} from 'vue'
-import {Plus} from '@element-plus/icons-vue'
-import {Jimp} from "jimp";
+import { ref } from "vue"
+import { Plus } from "@element-plus/icons-vue"
+import { Jimp } from "jimp"
 
-import type {UploadProps} from 'element-plus'
+import type { UploadProps } from "element-plus"
 
 // 定义 props 和 emits
 const props = defineProps<{
   img: string | undefined
 }>()
-const emits = defineEmits(['update:img'])
+const emits = defineEmits(["update:img"])
 
 // 使用 props 中的 modelValue 作为初始值
 const imageUrl = ref(props.img)
 
-const handleUpload: UploadProps['onChange'] = (
-  uploadFile
-) => {
+const handleUpload: UploadProps["onChange"] = (uploadFile) => {
   const file = uploadFile.raw!
   const reader = new FileReader()
   console.log(file)
@@ -41,19 +39,19 @@ const handleUpload: UploadProps['onChange'] = (
     if (e.target?.result) {
       const image = await Jimp.read(e.target.result as ArrayBuffer)
       // 裁切成正方形
-      var height = image.height;
-      var width = image.width;
+      const height = image.height
+      const width = image.width
       if (height > width) {
-        image.crop({x: 0, y: 0, h: width, w: width});
+        image.crop({ x: 0, y: 0, h: width, w: width })
       } else {
-        image.crop({x: 0, y: 0, h: height, w: height});
+        image.crop({ x: 0, y: 0, h: height, w: height })
       }
       // 调整大小为64*64
-      image.resize({w: 64, h: 64});
+      image.resize({ w: 64, h: 64 })
       const base64 = await image.getBase64("image/jpeg")
       imageUrl.value = base64
       // 触发 update:model-value 事件，更新父组件的 v-model 值
-      emits('update:img', imageUrl.value);
+      emits("update:img", imageUrl.value)
       console.log(imageUrl.value)
       console.log("----")
       console.log(props.img)

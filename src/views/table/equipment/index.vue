@@ -6,6 +6,8 @@ import { type FormInstance, type FormRules, ElMessage, ElMessageBox } from "elem
 import { Search, Refresh, CirclePlus, Delete, Download, RefreshRight } from "@element-plus/icons-vue"
 import { usePagination } from "@/hooks/usePagination"
 import { cloneDeep } from "lodash-es"
+import UploadImg64 from "@/components/UploadImg64/index.vue"
+import EquipmentValueSetting from "@/components/EquipmentValueSetting/index.vue"
 
 defineOptions({
   // 命名当前组件
@@ -20,7 +22,7 @@ const DEFAULT_FORM_DATA: EquipmentRequestData = {
   equipmentId: undefined,
   equipmentName: "",
   equipmentImg: "",
-  type: undefined,
+  type: undefined
 }
 const dialogVisible = ref<boolean>(false)
 const formRef = ref<FormInstance | null>(null)
@@ -97,7 +99,7 @@ const getTableData = () => {
     // size: paginationData.pageSize,
     equipmentId: searchData.equipmentId || undefined,
     equipmentName: searchData.equipmentName || "",
-    type: searchData.type || undefined,
+    type: searchData.type || undefined
   })
     .then(({ data }) => {
       paginationData.total = data.total
@@ -116,6 +118,10 @@ const handleSearch = () => {
 const resetSearch = () => {
   searchFormRef.value?.resetFields()
   handleSearch()
+}
+
+const updateImg = (img: string) => {
+  formData.value.equipmentImg = img
 }
 //#endregion
 
@@ -157,8 +163,12 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getTabl
       <div class="table-wrapper">
         <el-table :data="tableData">
           <el-table-column type="selection" width="50" align="center" />
-          <el-table-column prop="equipmentImg" label="图标" align="center" />
-          <el-table-column prop="equipmentId" label="装备id" align="center"/>
+          <el-table-column prop="equipmentImg" width="128" label="图片" align="center">
+            <template #default="scope">
+              <img :src="scope.row.equipmentImg" alt="" width="50" height="50" />
+            </template>
+          </el-table-column>
+          <el-table-column prop="equipmentId" label="装备id" align="center" />
           <el-table-column prop="equipmentName" label="装备名称" align="center" />
           <el-table-column fixed="right" label="操作" width="150" align="center">
             <template #default="scope">
@@ -193,6 +203,9 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getTabl
         <el-form-item prop="equipmentName" label="装备名">
           <el-input v-model="formData.equipmentName" placeholder="请输入" />
         </el-form-item>
+        <el-form-item prop="equipmentImg" label="头像">
+          <UploadImg64 :img="formData.equipmentImg" @update:img="updateImg" />
+        </el-form-item>
         <el-form-item prop="consumption" label="价格">
           <el-input-number v-model="formData.consumption" placeholder="请输入" />
         </el-form-item>
@@ -202,8 +215,8 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getTabl
         <el-form-item prop="subEquips" label="子装备">
           <el-input v-model="formData.subEquipsModel" placeholder="请选择" />
         </el-form-item>
-        <el-form-item prop="equipmentImg" label="装备图片" v-if="formData.equipmentId === undefined">
-          <el-input v-model="formData.equipmentImg" placeholder="请上传" />
+        <el-form-item>
+          <EquipmentValueSetting />
         </el-form-item>
       </el-form>
       <template #footer>

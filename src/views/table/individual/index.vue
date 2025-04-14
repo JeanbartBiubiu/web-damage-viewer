@@ -2,7 +2,14 @@
 import { reactive, ref, watch } from "vue"
 import { getLevel } from "@/api/level"
 import { getAttribute } from "@/api/attribute"
-import { createIndiv, updateIndiv, deleteIndiv, getIndiv, getIndivdualValues, settingIndivAttrValues } from "@/api/individual"
+import {
+  createIndiv,
+  updateIndiv,
+  deleteIndiv,
+  getIndiv,
+  getIndivdualValues,
+  settingIndivAttrValues
+} from "@/api/individual"
 import { type GetAttributeData } from "@/api/attribute/types/attribute"
 import { type GetLevelData } from "@/api/level/types/level"
 import {
@@ -17,7 +24,7 @@ import { type FormInstance, type FormRules, ElMessage, ElMessageBox } from "elem
 import { Search, Refresh, CirclePlus, Delete, Download, RefreshRight } from "@element-plus/icons-vue"
 import { usePagination } from "@/hooks/usePagination"
 import { cloneDeep, update } from "lodash-es"
-import UploadImg64 from '@/components/UploadImg64/index.vue';
+import UploadImg64 from "@/components/UploadImg64/index.vue"
 
 defineOptions({
   // 命名当前组件
@@ -59,34 +66,34 @@ const handleCreateOrUpdate = () => {
 }
 
 const settingValues = () => {
-  let tempArray = ref<Array<GetIndivAttributeValueData>>()
+  const tempArray = ref<Array<GetIndivAttributeValueData>>()
   tempArray.value = new Array<GetIndivAttributeValueData>()
   // 将list转换为后端要的结构
-  settingTableListValue.value.forEach(item => {
-      for (let index = 1; index <= 50; index++) {
-        if (item[`value${index}`] == undefined) {
-          break;
-        }
-        var tempObject = {
-            indivId: indivId.value,
-            attributeId: item.attributeId,
-            levelId: index,
-            value: item[`value${index}`]
-        } as GetIndivAttributeValueData;
-        if (tempArray.value) {
-          tempArray.value.push(tempObject)
-        }
+  settingTableListValue.value.forEach((item) => {
+    for (let index = 1; index <= 50; index++) {
+      if (item[`value${index}`] == undefined) {
+        break
       }
-  });
-    settingIndivAttrValues(tempArray.value)
-      .then(() => {
-        ElMessage.success("操作成功")
-        settingAttribute.value = false
-        getTableData()
-      })
-      .finally(() => {
-        loading.value = false
-      })
+      const tempObject = {
+        indivId: indivId.value,
+        attributeId: item.attributeId,
+        levelId: index,
+        value: item[`value${index}`]
+      } as GetIndivAttributeValueData
+      if (tempArray.value) {
+        tempArray.value.push(tempObject)
+      }
+    }
+  })
+  settingIndivAttrValues(tempArray.value)
+    .then(() => {
+      ElMessage.success("操作成功")
+      settingAttribute.value = false
+      getTableData()
+    })
+    .finally(() => {
+      loading.value = false
+    })
 }
 const resetForm = () => {
   formRef.value?.clearValidate()
@@ -157,12 +164,12 @@ const settingTableMapValue = ref<Map<number, IndivAttributeValueHolisticData>>()
 const settingTableListValue = ref<IndivAttributeValueHolisticData[]>([])
 const attributeValues = ref<GetIndivAttributeValueData[]>([])
 // 属性定义
-let baseAttrDef = ref<GetAttributeData[]>([])
+const baseAttrDef = ref<GetAttributeData[]>([])
 // 等级定义
-let baseLevelDef = ref<GetLevelData[]>([])
+const baseLevelDef = ref<GetLevelData[]>([])
 // 具体属性值map
-let valueMap = ref<Map<number, Map<number, GetIndivAttributeValueData>>>()
-let indivId = ref<number>()
+const valueMap = ref<Map<number, Map<number, GetIndivAttributeValueData>>>()
+const indivId = ref<number>()
 const getAttributeData = (params: IndivRequestData) => {
   loading.value = true
   indivId.value = params.indivId
@@ -355,7 +362,7 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getTabl
     >
       <el-form ref="formRef" :model="formData" :rules="formRules" label-width="100px" label-position="left">
         <el-form-item prop="indivImg" label="头像">
-          <UploadImg64 :img="formData.indivImg" @update:img="updateImg"/>
+          <UploadImg64 :img="formData.indivImg" @update:img="updateImg" />
         </el-form-item>
         <el-form-item prop="indivName" label="角色名">
           <el-input v-model="formData.indivName" placeholder="请输入" />
@@ -370,8 +377,7 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getTabl
     <el-dialog v-model="settingAttribute" title="设置属性值" @closed="resetForm" width="50%">
       <el-form ref="formRef" :model="valueFormData" :rules="formRules" label-width="300px" label-position="left">
         <el-table :data="settingTableListValue" style="width: 100%">
-          <el-table-column prop="attributeName" label="属性" :width="180">
-          </el-table-column>
+          <el-table-column prop="attributeName" label="属性" :width="180" />
           <el-table-column
             v-for="(levelItem, index) in baseLevelDef"
             :prop="'value' + (index + 1)"

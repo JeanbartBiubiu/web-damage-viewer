@@ -6,8 +6,15 @@ export interface EquipmentRequestData {
   subEquips?: Array<string>
   subEquipsModel?: string
   equipmentImg?: string
-
   type?: number
+  equipIds?: Array<EquipmentValue>
+}
+
+export interface EquipmentValue {
+  equipId: number
+  attributeId: number
+  addValue: number
+  multiValue: number
 }
 
 export interface GetEquipmentRequestData {

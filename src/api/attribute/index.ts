@@ -1,7 +1,6 @@
 import { request } from "@/utils/service"
 import type * as Attribute from "./types/attribute"
 
-
 /** 增 */
 export function createAttribute(data: Attribute.AttributeRequestData) {
   return request({
@@ -36,4 +35,3 @@ export function getAttribute(params: Attribute.AttributeRequestData) {
     params
   })
 }
-
