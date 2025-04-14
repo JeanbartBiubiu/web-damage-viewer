@@ -72,6 +72,15 @@ export const constantRoutes: RouteRecordRaw[] = [
     },
     children: [
       {
+        path: "okk",
+        component: () => import("@/views/global/okk/index.vue"),
+        name: "okk",
+        meta: {
+          title: "获取token",
+          keepAlive: true
+        }
+      },
+      {
         path: "selectGame",
         component: () => import("@/views/global/selectGame/index.vue"),
         name: "SelectGame",
@@ -88,7 +97,7 @@ export const constantRoutes: RouteRecordRaw[] = [
           title: "token设置",
           keepAlive: true
         }
-      },
+      }
     ]
   },
   {
