@@ -163,6 +163,15 @@ export const constantRoutes: RouteRecordRaw[] = [
           title: "技能管理",
           keepAlive: true
         }
+      },
+      {
+        path: "type",
+        component: () => import("@/views/table/type/index.vue"),
+        name: "TypeMge",
+        meta: {
+          title: "类型管理",
+          keepAlive: true
+        }
       }
     ]
   },

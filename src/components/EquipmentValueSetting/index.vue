@@ -5,7 +5,6 @@
         <div class="input-group">
           <el-input-number
             v-model="attr.addValue"
-            :min="0"
             :precision="0"
             :step="1"
             @wheel.prevent="handleWheel($event, attr, 'addValue')"
@@ -13,10 +12,9 @@
           />
           <el-input-number
             v-model="attr.multiValue"
-            :min="0"
             :precision="2"
             :step="0.1"
-            :default-value="1"
+            :default-value="0"
             @wheel.prevent="handleWheel($event, attr, 'multiValue')"
             placeholder="倍率"
           />
@@ -27,10 +25,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue"
+import { ref, computed, onMounted, watch } from "vue"
 import { getAttribute } from "@/api/attribute"
 
 const props = defineProps<{
+  equipId?: number
   editData?: Array<{
     attributeId: number
     addValue: number
@@ -40,12 +39,52 @@ const props = defineProps<{
 
 const values = ref<
   Array<{
+    equipId: number
     attributeId: number
     attributeName: string
     addValue: number
     multiValue: number
   }>
 >([])
+
+const emits = defineEmits(["update:values"])
+
+// 监听 values 的变化，触发事件
+watch(
+  values,
+  (newValues) => {
+    emits("update:values", newValues)
+  },
+  { deep: true }
+)
+
+// 监听 editData 变化
+watch(
+  () => props.editData,
+  (newEditData) => {
+    if (newEditData) {
+      newEditData.forEach((item) => {
+        const attr = values.value.find((a) => a.attributeId === item.attributeId)
+        if (attr) {
+          attr.equipId = props.equipId || 0
+          attr.addValue = item.addValue
+          attr.multiValue = item.multiValue
+        }
+      })
+    }
+  },
+  { deep: true }
+)
+
+// 监听 equipId 变化
+watch(
+  () => props.equipId,
+  (newEquipId) => {
+    values.value.forEach((attr) => {
+      attr.equipId = newEquipId || 0
+    })
+  }
+)
 
 // 根据是否有值排序属性
 const sortedAttributes = computed(() => {
@@ -71,16 +110,20 @@ const fetchAttributes = async () => {
   try {
     const res = await getAttribute({})
     values.value = res.data.list.map((attr) => ({
-      ...attr,
+      equipId: props.equipId || 0,
+      attributeId: attr.attributeId,
+      attributeName: attr.attributeName,
       addValue: 0,
-      multiValue: 1
+      multiValue: 0
     }))
+    console.log(props.editData)
 
     // 如果是编辑模式，设置已有值
     if (props.editData) {
       props.editData.forEach((item) => {
         const attr = values.value.find((a) => a.attributeId === item.attributeId)
         if (attr) {
+          attr.equipId = props.equipId || 0
           attr.addValue = item.addValue
           attr.multiValue = item.multiValue
         }
@@ -94,7 +137,7 @@ const fetchAttributes = async () => {
 // 获取属性值
 const getAttributeValues = () => {
   return values.value
-    .filter((attr) => attr.addValue !== 0 || attr.multiValue !== 1)
+    .filter((attr) => attr.addValue !== 0 || attr.multiValue !== 0)
     .map((attr) => ({
       attributeId: attr.attributeId,
       addValue: attr.addValue,

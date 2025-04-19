@@ -37,9 +37,12 @@ export interface GetEquipmentData {
   subEquips: string[]
   subEquipsModel: string
   type: number
+  equipIds?: EquipmentValue[]
 }
 
 export type GetEquipmentResponseData = ApiResponseData<{
   list: GetEquipmentData[]
   total: number
 }>
+
+export type GetEquipmentResponseDetail = ApiResponseData<GetEquipmentData>

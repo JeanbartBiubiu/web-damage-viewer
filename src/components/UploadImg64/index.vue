@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue"
+import { ref, watch } from "vue"
 import { Plus } from "@element-plus/icons-vue"
 import { Jimp } from "jimp"
 
@@ -29,6 +29,14 @@ const emits = defineEmits(["update:img"])
 
 // 使用 props 中的 modelValue 作为初始值
 const imageUrl = ref(props.img)
+
+// 监听 props.img 的变化
+watch(
+  () => props.img,
+  (newVal) => {
+    imageUrl.value = newVal
+  }
+)
 
 const handleUpload: UploadProps["onChange"] = (uploadFile) => {
   const file = uploadFile.raw!

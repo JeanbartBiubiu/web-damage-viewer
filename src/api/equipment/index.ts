@@ -1,6 +1,6 @@
 import { request } from "@/utils/service"
 import type * as Equipment from "./types/equipment"
-
+import { GetEquipmentResponseDetail } from "./types/equipment"
 
 /** 增 */
 export function createEquipment(data: Equipment.EquipmentRequestData) {
@@ -37,3 +37,10 @@ export function getEquipment(params: Equipment.EquipmentRequestData) {
   })
 }
 
+/** 获取装备详情 */
+export function getEquipmentDetail(id: number) {
+  return request<Equipment.GetEquipmentResponseDetail>({
+    url: `equipment/${id}`,
+    method: "get"
+  })
+}

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { reactive, ref, watch } from "vue"
-import { createEquipment, deleteEquipment, updateEquipment, getEquipment } from "@/api/equipment"
+import { createEquipment, deleteEquipment, updateEquipment, getEquipment, getEquipmentDetail } from "@/api/equipment"
 import { type EquipmentRequestData, type GetEquipmentData } from "@/api/equipment/types/equipment"
 import { type FormInstance, type FormRules, ElMessage, ElMessageBox } from "element-plus"
 import { Search, Refresh, CirclePlus, Delete, Download, RefreshRight } from "@element-plus/icons-vue"
@@ -22,7 +22,8 @@ const DEFAULT_FORM_DATA: EquipmentRequestData = {
   equipmentId: undefined,
   equipmentName: "",
   equipmentImg: "",
-  type: undefined
+  type: undefined,
+  equipIds: []
 }
 const dialogVisible = ref<boolean>(false)
 const formRef = ref<FormInstance | null>(null)
@@ -70,17 +71,31 @@ const handleDelete = (row: GetEquipmentData) => {
 
 //#region 改
 const handleUpdate = (row: GetEquipmentData) => {
+  resetForm()
   dialogVisible.value = true
-  formData.value = {
-    equipmentId: row.equipmentId,
-    equipmentName: row.equipmentName,
-    consumption: row.consumption,
-    attributeExpression: row.attributeExpression,
-    subEquips: row.subEquips,
-    subEquipsModel: row.subEquipsModel,
-    equipmentImg: row.equipmentImg,
-    type: row.type
-  }
+  loading.value = true
+
+  getEquipmentDetail(row.equipmentId)
+    .then(({ data }) => {
+      formData.value = {
+        equipmentId: data.equipmentId,
+        equipmentName: data.equipmentName,
+        consumption: data.consumption,
+        attributeExpression: data.attributeExpression,
+        subEquips: data.subEquips,
+        subEquipsModel: data.subEquipsModel,
+        equipmentImg: data.equipmentImg,
+        type: data.type,
+        equipIds: data.equipIds || []
+      }
+    })
+    .catch(() => {
+      ElMessage.error("获取装备详情失败")
+    })
+    .finally(() => {
+      console.log("editData 数据:", formData.value)
+      loading.value = false
+    })
 }
 //#endregion
 
@@ -165,7 +180,12 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getTabl
           <el-table-column type="selection" width="50" align="center" />
           <el-table-column prop="equipmentImg" width="128" label="图片" align="center">
             <template #default="scope">
-              <img :src="scope.row.equipmentImg" alt="" width="50" height="50" />
+              <el-image
+                :src="scope.row.equipmentImg"
+                :preview-src-list="[scope.row.equipmentImg]"
+                fit="cover"
+                style="width: 50px; height: 50px; border-radius: 4px"
+              />
             </template>
           </el-table-column>
           <el-table-column prop="equipmentId" label="装备id" align="center" />
@@ -216,7 +236,11 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getTabl
           <el-input v-model="formData.subEquipsModel" placeholder="请选择" />
         </el-form-item>
         <el-form-item>
-          <EquipmentValueSetting />
+          <EquipmentValueSetting
+            :equipId="formData.equipmentId || 0"
+            :editData="formData.equipIds"
+            @update:values="(newValues) => (formData.equipIds = newValues)"
+          />
         </el-form-item>
       </el-form>
       <template #footer>
