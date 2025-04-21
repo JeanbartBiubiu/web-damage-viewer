@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, watchEffect } from "vue"
+import { computed, watchEffect, onMounted } from "vue"
 import { storeToRefs } from "pinia"
 import { useSettingsStore } from "@/store/modules/settings"
 import useResize from "./hooks/useResize"
@@ -11,6 +11,7 @@ import TopMode from "./TopMode.vue"
 import LeftTopMode from "./LeftTopMode.vue"
 import { Settings, RightPanel } from "./components"
 import { getCssVariableValue, setCssVariableValue } from "@/utils"
+import { request } from "@/utils/service"
 
 /** Layout 布局响应式 */
 useResize()
@@ -41,6 +42,30 @@ watchEffect(() => {
 /** 开启或关闭系统水印 */
 watchEffect(() => {
   showWatermark.value ? setWatermark(import.meta.env.VITE_APP_TITLE) : clearWatermark()
+})
+
+/** 记录PV和UV统计 */
+const recordPvUv = () => {
+  // 获取或生成用户唯一标识符
+  let uid = localStorage.getItem("visitor_uid")
+  if (!uid) {
+    uid = `user_${Math.random().toString(36).substring(2, 15)}_${Date.now()}`
+    localStorage.setItem("visitor_uid", uid)
+  }
+
+  // 发送请求记录PV和UV
+  request({
+    url: "/pv",
+    method: "get",
+    params: { uid }
+  }).catch((error) => {
+    console.error("统计PV、UV失败:", error)
+  })
+}
+
+// 在组件挂载时记录PV和UV
+onMounted(() => {
+  recordPvUv()
 })
 </script>
 
