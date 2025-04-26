@@ -20,10 +20,9 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, reactive, nextTick } from "vue"
+import { ref, onMounted, reactive, nextTick, shallowRef } from "vue"
 import { request } from "@/utils/service"
 import * as echarts from "echarts"
-console.log(echarts) // 检查 echarts 对象是否存在
 
 interface PvUv {
   hour: number
@@ -33,7 +32,7 @@ interface PvUv {
 
 const chartRef = ref<HTMLElement | null>(null)
 const loading = ref(true)
-const chartInstance = ref<echarts.ECharts | null>(null)
+const chartInstance = shallowRef<echarts.ECharts | null>(null)
 const pvUvData = reactive<{
   dates: string[]
   pvData: number[]
@@ -82,7 +81,6 @@ const fetchPvUvData = async () => {
       loading.value = false
     }
   } catch (error) {
-    console.error("获取PV/UV数据失败:", error)
     loading.value = false
   }
 }
@@ -135,6 +133,18 @@ const initChart = () => {
     yAxis: {
       type: "value"
     },
+    dataZoom: [
+      {
+        type: "slider", // 滑动条类型的 dataZoom
+        xAxisIndex: 0, // 对应 x 轴的索引
+        start: 0, // 初始化时的起始位置百分比
+        end: 100, // 初始化时的结束位置百分比
+        height: 20, // 滑动条的高度
+        handleIcon:
+          "M10.7,11.9H9.3c-4.4,0-7.8-1.4-7.8-5.6c0-4.2,3.4-5.6,7.8-5.6h1.3c4.4,0,7.8,1.4,7.8,5.6C18.5,10.5,15.1,11.9,10.7,11.9z M13.3,4.7c0-1.6-1.3-2.9-2.9-2.9H9.3c-1.6,0-2.9,1.3-2.9,2.9s1.3,2.9,2.9,2.9h1.3c1.6,0,2.9-1.3,2.9-2.9z", // 滑块图标
+        handleSize: "80%" // 滑块大小
+      }
+    ],
     series: [
       {
         name: "页面访问量(PV)",
