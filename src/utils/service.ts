@@ -2,7 +2,7 @@ import axios, { type AxiosInstance, type AxiosRequestConfig } from "axios"
 import { useUserStoreHook } from "@/store/modules/user"
 import { ElMessage } from "element-plus"
 import { get, merge } from "lodash-es"
-import {getCurrentSchema, getToken} from "./cache/cookies"
+import { getCurrentSchema, getToken } from "./cache/cookies"
 
 /** 退出登录并强制刷新页面（会重定向到登录页） */
 function logout() {
@@ -106,7 +106,7 @@ function createRequest(service: AxiosInstance) {
         // 携带 Token
         Authorization: token ? `Bearer ${token}` : undefined,
         "Content-Type": "application/json",
-        "currentSchema": currentSchema ? currentSchema : undefined
+        currentSchema: currentSchema ? currentSchema : undefined
       },
       timeout: 5000,
       baseURL: import.meta.env.VITE_BASE_API,
@@ -114,6 +114,9 @@ function createRequest(service: AxiosInstance) {
     }
     // 将默认配置 defaultConfig 和传入的自定义配置 config 进行合并成为 mergeConfig
     const mergeConfig = merge(defaultConfig, config)
+    if (config.method === "get") {
+      // TODO 如果是get请求并且编辑开关关闭时需要用全局缓存机制替换
+    }
     return service(mergeConfig)
   }
 }

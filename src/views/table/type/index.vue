@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { reactive, ref, watch } from "vue"
 import { ElMessage, ElMessageBox, FormInstance } from "element-plus"
-import { Search, Refresh, CirclePlus, Delete, Download, RefreshRight } from "@element-plus/icons-vue"
+import { Search, Refresh, CirclePlus, Delete, RefreshRight } from "@element-plus/icons-vue"
 import { Type, TypeDTO, getTypes, createType, updateType, deleteType, getParentTypes } from "@/api/type"
 
 defineOptions({
@@ -133,13 +133,13 @@ const submitForm = async () => {
   await formRef.value.validate((valid) => {
     if (valid) {
       const isCreate = formData.type.id === undefined
-      const apiMethod = isCreate ? createType : updateType
       const successMsg = isCreate ? "创建成功" : "修改成功"
 
       loading.value = true
 
       if (isCreate) {
-        apiMethod(formData)
+        // 修正调用方式，确保参数正确
+        createType(formData)
           .then(({ data }) => {
             if (data) {
               ElMessage.success(successMsg)
@@ -154,7 +154,7 @@ const submitForm = async () => {
             loading.value = false
           })
       } else {
-        apiMethod(formData.type.id as number, formData)
+        updateType(formData.type.id as number, formData)
           .then(({ data }) => {
             if (data) {
               ElMessage.success(successMsg)
@@ -231,7 +231,7 @@ const showChildTypes = (row: Type) => {
 // 获取子类型列表
 const getChildTypes = (id: number): Promise<{ data: Type[] }> => {
   return new Promise((resolve) => {
-    const data = tableData.value.filter((item) => formData.parentTypeIds.includes(id as number))
+    const data = tableData.value.filter(() => formData.parentTypeIds.includes(id as number))
     resolve({ data })
   })
 }
@@ -317,7 +317,7 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getTabl
               v-for="item in parentOptions"
               :key="item.id"
               :label="item.name"
-              :value="item.id"
+              :value="item.id!"
               :disabled="item.id === formData.type.id"
             />
           </el-select>

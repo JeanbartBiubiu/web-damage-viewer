@@ -72,15 +72,6 @@ export const constantRoutes: RouteRecordRaw[] = [
     },
     children: [
       {
-        path: "okk",
-        component: () => import("@/views/global/okk/index.vue"),
-        name: "okk",
-        meta: {
-          title: "获取token",
-          keepAlive: true
-        }
-      },
-      {
         path: "selectGame",
         component: () => import("@/views/global/selectGame/index.vue"),
         name: "SelectGame",
@@ -182,7 +173,7 @@ export const constantRoutes: RouteRecordRaw[] = [
     name: "Example",
     meta: {
       title: "测试新功能",
-      svgIcon: "example"
+      elIcon: "Fries"
     },
     children: [
       {
@@ -200,6 +191,24 @@ export const constantRoutes: RouteRecordRaw[] = [
         name: "Wasm",
         meta: {
           title: "wasm性能测试",
+          keepAlive: true
+        }
+      },
+      {
+        path: "echart3D",
+        component: () => import("@/views/example/echart-test/index.vue"),
+        name: "Echart3D",
+        meta: {
+          title: "echart预期",
+          keepAlive: true
+        }
+      },
+      {
+        path: "rtc",
+        component: () => import("@/views/example/rtc-exchange-data/index.vue"),
+        name: "RTCExchangeData",
+        meta: {
+          title: "rtc p2p交换数据测试",
           keepAlive: true
         }
       }

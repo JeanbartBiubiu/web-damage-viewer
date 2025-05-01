@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { ref, onMounted, reactive } from "vue"
 import * as echarts from "echarts"
-import {AttackTime, IndivExample} from "@/utils/chartExapmle"
-import 'echarts-gl';
-import { type FormInstance, type FormRules, ElMessage, ElMessageBox } from "element-plus"
+import { AttackTime, IndivExample } from "@/utils/chartExapmle"
+import "echarts-gl"
+import { type FormInstance } from "element-plus"
 
 const chartContainer = ref<HTMLElement | null>(null)
 
@@ -31,13 +31,27 @@ onMounted(() => {
   updateChart()
 })
 
-function updateChart(){
+function updateChart() {
   console.log(chartContainer.value)
   if (chartContainer.value) {
-    let innerAObj = new IndivExample(aObj.Attk,aObj.Speed,aObj.HuJia,aObj.Chuantou,aObj.ChuantouBaifenbi,aObj.Baoji);
-    let innerBObj = new IndivExample(bObj.Attk,bObj.Speed,bObj.HuJia,bObj.Chuantou,bObj.ChuantouBaifenbi,bObj.Baoji);
+    const innerAObj = new IndivExample(
+      aObj.Attk,
+      aObj.Speed,
+      aObj.HuJia,
+      aObj.Chuantou,
+      aObj.ChuantouBaifenbi,
+      aObj.Baoji
+    )
+    const innerBObj = new IndivExample(
+      bObj.Attk,
+      bObj.Speed,
+      bObj.HuJia,
+      bObj.Chuantou,
+      bObj.ChuantouBaifenbi,
+      bObj.Baoji
+    )
     const myChart = echarts.init(chartContainer.value)
-    var option = {
+    const option = {
       tooltip: {},
       backgroundColor: "#fff",
       visualMap: {
@@ -64,19 +78,19 @@ function updateChart(){
       xAxis3D: {
         type: "value",
         name: "攻击力",
-        min:0,
-        max: 600,
+        min: 0,
+        max: 600
       },
       yAxis3D: {
         type: "value",
         name: "护甲",
-        min:0,
-        max: 500,
+        min: 0,
+        max: 500
       },
       zAxis3D: {
         type: "value",
         name: "伤害",
-        min:0
+        min: 0
       },
       grid3D: {
         viewControl: {
@@ -87,30 +101,30 @@ function updateChart(){
         {
           type: "surface",
           wireframe: {
-             show: true
+            show: true
           },
           equation: {
             x: {
               step: 10,
-              min:0,
-              max:600
+              min: 0,
+              max: 600
             },
             y: {
               step: 15,
-              min:0,
-              max:500
+              min: 0,
+              max: 500
             },
-            z: function (x:number, y:number) {
-              console.log("x=",x)
-              console.log("y=",y)
-              innerAObj.Attk = aObj.Attk + x;
-              innerBObj.HuJia = bObj.HuJia + y;
-              if (Number.isNaN(innerAObj.Attack(innerBObj))){
-                const d = Math.random()*100
+            z: function (x: number, y: number) {
+              console.log("x=", x)
+              console.log("y=", y)
+              innerAObj.Attk = aObj.Attk + x
+              innerBObj.HuJia = bObj.HuJia + y
+              if (Number.isNaN(innerAObj.Attack(innerBObj))) {
+                const d = Math.random() * 100
                 console.log(d)
                 return d
-              } else{
-                const d = AttackTime(10,innerAObj,innerBObj)
+              } else {
+                const d = AttackTime(10, innerAObj, innerBObj)
                 console.log(d)
                 return d
               }
@@ -176,7 +190,7 @@ function updateChart(){
   <div class="app-container">
     <el-button @click="updateChart">更新图表</el-button>
   </div>
-  <div ref="chartContainer" style="width: 1000px; height: 1000px;"></div>
+  <div ref="chartContainer" style="width: 1000px; height: 1000px" />
 </template>
 
 <style scoped>
