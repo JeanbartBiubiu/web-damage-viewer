@@ -4,6 +4,10 @@
 
     <label>
       房间号：
+      <select v-model="roomId" @change="onRoomSelect">
+        <option value="">手动输入房间号</option>
+        <option v-for="id in roomIds" :key="id" :value="id">{{ id }}</option>
+      </select>
       <input v-model="roomId" placeholder="输入房间ID" />
     </label>
     <br />
@@ -16,8 +20,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
+import { onMounted, ref } from "vue"
+import { getRooms } from "@/api/room"
+const vitebaseapi = import.meta.env.VITE_WS_URL
 
+const roomIds = ref<string[]>([])
 const roomId = ref("")
 const log = ref<string[]>([])
 let ws: WebSocket
@@ -25,6 +32,32 @@ let pc: RTCPeerConnection | null = null
 let dataChannel: RTCDataChannel
 let myId = ""
 let peerId = ""
+
+// 当用户选择房间时，如果选择手动输入，清空房间号
+function onRoomSelect() {
+  if (roomId.value === "") {
+    roomId.value = ""
+  }
+}
+
+// 获取房间 ID 列表
+async function fetchRoomIds() {
+  try {
+    // 使用 request 函数发起请求
+    getRooms()
+      .then((res) => {
+        roomIds.value = res.data
+      })
+      .catch((err) => {
+        console.error("获取房间列表失败:", err)
+      })
+      .finally(() => {
+        console.log("获取房间列表完成")
+      })
+  } catch (error) {
+    appendLog(`获取房间列表失败: ${error}`)
+  }
+}
 
 function appendLog(msg: string) {
   log.value.push(`[${new Date().toLocaleTimeString()}] ${msg}`)
@@ -117,7 +150,8 @@ function joinRoom() {
   }
 
   try {
-    ws = new WebSocket("ws://localhost:3333/api/ws")
+    console.log(vitebaseapi)
+    ws = new WebSocket(vitebaseapi)
 
     ws.onopen = () => {
       appendLog("WebSocket 已连接")
@@ -222,6 +256,10 @@ function sendMessage() {
     }
   }
 }
+
+onMounted(() => {
+  fetchRoomIds()
+})
 </script>
 
 <style scoped>
