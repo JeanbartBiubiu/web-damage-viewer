@@ -38,8 +38,8 @@ export const constantRoutes: RouteRecordRaw[] = [
     alias: "/:pathMatch(.*)*"
   },
   {
-    path: "/login",
-    component: () => import("@/views/login/index.vue"),
+    path: "/login/huawei",
+    component: () => import("@/views/login/huawei/index.vue"),
     meta: {
       hidden: true
     }

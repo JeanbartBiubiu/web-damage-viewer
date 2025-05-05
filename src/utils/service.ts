@@ -2,7 +2,8 @@ import axios, { type AxiosInstance, type AxiosRequestConfig } from "axios"
 import { useUserStoreHook } from "@/store/modules/user"
 import { ElMessage } from "element-plus"
 import { get, merge } from "lodash-es"
-import { getCurrentSchema, getToken } from "./cache/cookies"
+import { getCurrentSchema } from "./cache/cookies"
+import { getAuthToken, removeJwtToken } from "@/utils/cache/local-storage"
 
 /** 退出登录并强制刷新页面（会重定向到登录页） */
 function logout() {
@@ -40,6 +41,8 @@ function createService() {
           // 本系统采用 code === 0 来表示没有业务错误
           return apiData
         case 401:
+          removeJwtToken()
+          ElMessage.error("凭据不存在，已删除，需要重新登录")
           // Token 过期时
           return logout()
         default:
@@ -98,8 +101,8 @@ function createService() {
 
 /** 创建请求方法 */
 function createRequest(service: AxiosInstance) {
-  return function <T>(config: AxiosRequestConfig): Promise<T> {
-    const token = getToken()
+  return async function <T>(config: AxiosRequestConfig): Promise<T> {
+    const token = await getAuthToken()
     const currentSchema = getCurrentSchema()
     const defaultConfig = {
       headers: {

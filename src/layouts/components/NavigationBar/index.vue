@@ -14,6 +14,7 @@ import Screenfull from "@/components/Screenfull/index.vue"
 import SearchMenu from "@/components/SearchMenu/index.vue"
 import { useDevice } from "@/hooks/useDevice"
 import { useLayoutMode } from "@/hooks/useLayoutMode"
+import HuaweiLogin from "@/views/login/huawei/index.vue"
 
 const { isMobile } = useDevice()
 const { isTop } = useLayoutMode()
@@ -33,6 +34,37 @@ const logout = () => {
   userStore.logout()
   router.push("/login")
 }
+
+import { decodeCredential } from "vue3-google-login"
+import { getToken } from "@/api/login/huawei/login"
+import { ElMessage } from "element-plus"
+import { SSOBody } from "@/api/login/huawei/types/login"
+
+interface GoogleResponse {
+  credential: string
+}
+
+const googleCallback = (response: GoogleResponse) => {
+  // This callback will be triggered when the user selects or login to
+  // his Google account from the popup
+  console.log("Handle the response", response)
+  // decodeCredential will retrive the JWT payload from the credential
+  const userData = decodeCredential(response.credential)
+  console.log("Handle the userData", userData)
+}
+
+const huaweiCallback = (response: SSOBody) => {
+  // 请求后端接口设置token
+  console.log("Handle the response", response)
+  getToken(response)
+    .then((resp) => {
+      localStorage.setItem("token", resp.data)
+    })
+    .catch(() => {
+      ElMessage.error("鉴权失败")
+    })
+    .finally(() => {})
+}
 </script>
 
 <template>
@@ -50,6 +82,7 @@ const logout = () => {
       <Screenfull v-if="showScreenfull" class="right-menu-item" />
       <ThemeSwitch v-if="showThemeSwitch" class="right-menu-item" />
       <Notify v-if="showNotify" class="right-menu-item" />
+      <HuaweiLogin :callback="huaweiCallback" />
       <el-dropdown class="right-menu-item">
         <div class="right-menu-avatar">
           <el-avatar :icon="UserFilled" :size="30" />
@@ -57,6 +90,7 @@ const logout = () => {
         </div>
         <template #dropdown>
           <el-dropdown-menu>
+            <GoogleLogin :callback="googleCallback" />
             <a target="_blank" href="https://github.com/un-pany/v3-admin-vite">
               <el-dropdown-item>GitHub</el-dropdown-item>
             </a>
