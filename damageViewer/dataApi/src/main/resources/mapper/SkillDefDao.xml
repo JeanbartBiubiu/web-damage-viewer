@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.game.dao.SkillDefDao">
+
+    <resultMap type="xyz.game.entity.SkillDef" id="SkillDefMap">
+        <result property="skillId" column="skill_id" jdbcType="INTEGER"/>
+        <result property="skillName" column="skill_name" jdbcType="VARCHAR"/>
+        <result property="skillImg" column="skill_img" jdbcType="VARCHAR"/>
+        <result property="skillType" column="skill_type" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="SkillDefMap">
+        select
+skill_idskill_nameskill_imgskill_type
+        from ${whichGame}.skill_def
+        where skill_id = #{skillId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="query" resultMap="SkillDefMap">
+        select
+skill_idskill_nameskill_imgskill_type
+        from ${whichGame}.skill_def
+        <where>
+            <if test="skillId != null">
+                and skill_id = #{skillId}
+            </if>
+            <if test="skillName != null and skillName != ''">
+                and skill_name = #{skillName}
+            </if>
+            <if test="skillImg != null and skillImg != ''">
+                and skill_img = #{skillImg}
+            </if>
+            <if test="skillType != null and skillType != ''">
+                and skill_type = #{skillType}
+            </if>
+        </where>
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from ${whichGame}.skill_def
+        <where>
+            <if test="skillId != null">
+                and skill_id = #{skillId}
+            </if>
+            <if test="skillName != null and skillName != ''">
+                and skill_name = #{skillName}
+            </if>
+            <if test="skillImg != null and skillImg != ''">
+                and skill_img = #{skillImg}
+            </if>
+            <if test="skillType != null and skillType != ''">
+                and skill_type = #{skillType}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="skillId" useGeneratedKeys="true">
+        insert into ${whichGame}.skill_def(skill_nameskill_imgskill_type)
+        values (#{skillName}#{skillImg}#{skillType})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="skillId" useGeneratedKeys="true">
+        insert into ${whichGame}.skill_def(skill_nameskill_imgskill_type)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.skillName}#{entity.skillImg}#{entity.skillType})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="skillId" useGeneratedKeys="true">
+        insert into ${whichGame}.skill_def(skill_nameskill_imgskill_type)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.skillName}#{entity.skillImg}#{entity.skillType})
+        </foreach>
+        on duplicate key update
+skill_name = values(skill_name)skill_img = values(skill_img)skill_type = values(skill_type)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update ${whichGame}.skill_def
+        <set>
+            <if test="skillName != null and skillName != ''">
+                skill_name = #{skillName},
+            </if>
+            <if test="skillImg != null and skillImg != ''">
+                skill_img = #{skillImg},
+            </if>
+            <if test="skillType != null and skillType != ''">
+                skill_type = #{skillType},
+            </if>
+        </set>
+        where skill_id = #{skillId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from ${whichGame}.skill_def where skill_id = #{skillId}
+    </delete>
+
+</mapper>
+

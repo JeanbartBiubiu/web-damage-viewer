@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.game.dao.SkillSubDao">
+
+    <resultMap type="xyz.game.entity.SkillSub" id="SkillSubMap">
+        <result property="skillId" column="skill_id" jdbcType="INTEGER"/>
+        <result property="skillLevel" column="skilll_level" jdbcType="INTEGER"/>
+        <result property="cycleId" column="cycle_id" jdbcType="INTEGER"/>
+        <result property="skillConsumption" column="consumption" jdbcType="VARCHAR"/>
+        <result property="skillCd" column="cd" jdbcType="VARCHAR"/>
+        <result property="skillCheckAndDo" column="check_and_do" jdbcType="VARCHAR"/>
+        <result property="skillCastPoint" column="cast_point" jdbcType="VARCHAR"/>
+        <result property="skillCastPointAfter" column="cast_point_after" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap type="xyz.game.entity.custom.SkillReq" id="SkillMap">
+        <result property="skillId" column="skill_id" jdbcType="INTEGER"/>
+        <result property="skillName" column="skill_name" jdbcType="VARCHAR"/>
+        <result property="skillImg" column="skill_img" jdbcType="VARCHAR"/>
+        <result property="skillLevel" column="skill_level" jdbcType="INTEGER"/>
+        <result property="skillType" column="skill_type" jdbcType="INTEGER"/>
+        <result property="skillConsumption" column="consumption" jdbcType="VARCHAR"/>
+        <result property="skillCd" column="cd" jdbcType="VARCHAR"/>
+        <result property="skillCheckAndDo" column="check_and_do" jdbcType="VARCHAR"/>
+        <result property="skillCastPoint" column="cast_point" jdbcType="VARCHAR"/>
+        <result property="skillCastPointAfter" column="cast_point_after" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="maxId" resultType="java.lang.Integer">
+        select max(skill_id)
+        from skill_sub
+    </select>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="SkillSubMap">
+        select
+skill_idskilllLevelcycle_idconsumptioncdcheck_and_do
+        from skill_sub
+        where skill_id = #{skillId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="query" resultMap="SkillMap">
+        select
+        a.*,b.*
+        from skill_def a
+        left join skill_sub b
+        on a.skill_id = b.skill_id
+        <where>
+            <if test="skillId != null">
+                and skill_id = #{skillId}
+            </if>
+            <if test="skillLevel != null">
+                and skilll_Level = #{skillLevel}
+            </if>
+            <if test="skillConsumption != null and skillConsumption != ''">
+                and consumption = #{skillConsumption}
+            </if>
+            <if test="skillCd != null and skillCd != ''">
+                and cd = #{skillCd}
+            </if>
+            <if test="skillCheckAndDo != null and skillCheckAndDo != ''">
+                and check_and_do = #{skillCheckAndDo}
+            </if>
+        </where>
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from skill_sub
+        <where>
+            <if test="skillId != null">
+                and skill_id = #{skillId}
+            </if>
+            <if test="skillLevel != null">
+                and skilll_Level = #{skillLevel}
+            </if>
+            <if test="cycleId != null">
+                and cycle_id = #{cycleId}
+            </if>
+            <if test="skillConsumption != null and skillConsumption != ''">
+                and consumption = #{skillConsumption}
+            </if>
+            <if test="skillCd != null and skillCd != ''">
+                and cd = #{skillCd}
+            </if>
+            <if test="skillCheckAndDo != null and skillCheckAndDo != ''">
+                and check_and_do = #{skillCheckAndDo}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="skillId" useGeneratedKeys="true">
+        insert into skill_sub(skill_id, skill_level, consumption, cd, check_and_do, cast_point, cast_point_after)
+        values (#{skillId},#{skillLevel},#{skillConsumption},#{skillCd},#{skillCheckAndDo},#{skillCastPoint},#{skillCastPointAfter})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="skillId" useGeneratedKeys="true">
+        insert into skill_sub(consumptioncdcheck_and_do)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.consumption}#{entity.cd}#{entity.checkAndDo})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="skillId" useGeneratedKeys="true">
+        insert into skill_sub(consumptioncdcheck_and_do)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.consumption}#{entity.cd}#{entity.checkAndDo})
+        </foreach>
+        on duplicate key update
+consumption = values(consumption)cd = values(cd)check_and_do = values(check_and_do)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update skill_sub
+        <set>
+            <if test="consumption != null and consumption != ''">
+                consumption = #{consumption},
+            </if>
+            <if test="skillCd != null and skillCd != ''">
+                cd = #{skillCd},
+            </if>
+            <if test="skillCheckAndDo != null and skillCheckAndDo != ''">
+                check_and_do = #{skillCheckAndDo},
+            </if>
+        </set>
+        where skill_id = #{skillId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from skill_sub where skill_id = #{skillId}
+    </delete>
+
+</mapper>
+

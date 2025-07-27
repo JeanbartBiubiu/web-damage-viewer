@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.game.dao.IndivSkillDao">
+
+    <resultMap type="xyz.game.entity.IndivSkill" id="IndivSkillMap">
+        <result property="indivId" column="indiv_id" jdbcType="INTEGER"/>
+        <result property="skillId" column="skill_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="IndivSkillMap">
+        select
+indiv_idskill_id
+        from ${whichGame}.indiv_skill
+        where  = #{}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="query" resultMap="IndivSkillMap">
+        select
+indiv_idskill_id
+        from ${whichGame}.indiv_skill
+        <where>
+            <if test="indivId != null">
+                and indiv_id = #{indivId}
+            </if>
+            <if test="skillId != null">
+                and skill_id = #{skillId}
+            </if>
+        </where>
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from ${whichGame}.indiv_skill
+        <where>
+            <if test="indivId != null">
+                and indiv_id = #{indivId}
+            </if>
+            <if test="skillId != null">
+                and skill_id = #{skillId}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="" useGeneratedKeys="true">
+        insert into ${whichGame}.indiv_skill(indiv_idskill_id)
+        values (#{indivId}#{skillId})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="" useGeneratedKeys="true">
+        insert into ${whichGame}.indiv_skill(indiv_idskill_id)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.indivId}#{entity.skillId})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="" useGeneratedKeys="true">
+        insert into ${whichGame}.indiv_skill(indiv_idskill_id)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.indivId}#{entity.skillId})
+        </foreach>
+        on duplicate key update
+indiv_id = values(indiv_id)skill_id = values(skill_id)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update ${whichGame}.indiv_skill
+        <set>
+            <if test="indivId != null">
+                indiv_id = #{indivId},
+            </if>
+            <if test="skillId != null">
+                skill_id = #{skillId},
+            </if>
+        </set>
+        where  = #{}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from ${whichGame}.indiv_skill where  = #{}
+    </delete>
+
+</mapper>
+

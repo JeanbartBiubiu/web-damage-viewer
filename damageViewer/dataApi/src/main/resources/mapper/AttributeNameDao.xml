@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.game.dao.AttributeNameDao">
+
+    <resultMap type="xyz.game.entity.AttributeName" id="AttributeNameMap">
+        <result property="attributeId" column="attribute_id" jdbcType="INTEGER"/>
+        <result property="languageId" column="language_id" jdbcType="INTEGER"/>
+        <result property="attributeName" column="attribute_name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="AttributeNameMap">
+        select
+            attribute_id,language_id,attribute_name
+        from attribute_name
+            where attribute_id = #{attributeId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="query" resultMap="AttributeNameMap">
+        select
+attribute_idlanguage_idattribute_name
+        from attribute_name
+        <where>
+            <if test="attributeId != null">
+                and attribute_id = #{attributeId}
+            </if>
+            <if test="languageId != null">
+                and language_id = #{languageId}
+            </if>
+            <if test="attributeName != null and attributeName != ''">
+                and attribute_name = #{attributeName}
+            </if>
+        </where>
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from attribute_name
+        <where>
+            <if test="attributeId != null">
+                and attribute_id = #{attributeId}
+            </if>
+            <if test="languageId != null">
+                and language_id = #{languageId}
+            </if>
+            <if test="attributeName != null and attributeName != ''">
+                and attribute_name = #{attributeName}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into attribute_name(attribute_id,attribute_name)
+        values (#{attributeId},#{attributeName})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="attributeId" useGeneratedKeys="true">
+        insert into attribute_name(attribute_name)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.attributeName})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="attributeId" useGeneratedKeys="true">
+        insert into attribute_name(attribute_name)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.attributeName})
+        </foreach>
+        on duplicate key update
+attribute_name = values(attribute_name)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update attribute_name
+        <set>
+            <if test="attributeName != null and attributeName != ''">
+                attribute_name = #{attributeName},
+            </if>
+        </set>
+        where attribute_id = #{attributeId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from attribute_name where attribute_id = #{attributeId}
+    </delete>
+
+</mapper>
+

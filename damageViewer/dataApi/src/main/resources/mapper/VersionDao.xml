@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.game.dao.VersionDao">
+
+    <resultMap type="xyz.game.entity.Version" id="VersionMap">
+        <result property="versionId" column="version_id" jdbcType="INTEGER"/>
+        <result property="versionCode" column="version_code" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryNewest" resultMap="VersionMap">
+        select
+        version_id,version_code,update_time
+        from version
+        order by id desc
+        limit 1
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="versionId" useGeneratedKeys="true">
+        insert into version(version_id,version_code,update_time)
+        values (#{versionId},#{versionCode}#{updateTime})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update version
+        <set>
+            <if test="versionCode != null and versionCode != ''">
+                version_code = #{versionCode},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        where version_id = #{versionId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from version where version_id = #{versionId}
+    </delete>
+
+</mapper>
+

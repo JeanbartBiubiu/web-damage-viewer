@@ -1,24 +1,4 @@
 # Git 会忽略的文件
-/dataApi/target/
-/.idea/.gitignore
-/.gitignore
-/.idea/dataSources/a55c57bf-9bd6-4903-8866-626d5f08e8f9.xml
-/.idea/compiler.xml
-/.idea/damageViewer.iml
-/.idea/dataSources.local.xml
-/.idea/dataSources.xml
-/.idea/dataSources/a55c57bf-9bd6-4903-8866-626d5f08e8f9/storage_v2/_src_/schema/default_table.UAB9Tg.meta
-/.idea/easyCodeTableSetting.xml
-/.idea/jarRepositories.xml
-/.idea/misc.xml
-/.idea/modules.xml
-/.idea/mybatisx/templates.xml
-/.idea/uiDesigner.xml
-/.idea/vcs.xml
-/.idea/MarsCodeWorkspaceAppSettings.xml
-/dataApi/src/main/resources/application_prod.yml
-/dataApi/src/main/resources/application-prod.yml
-/dataApi/src/main/resources/token-private-key.txt
 
 
 .DS_Store
@@ -55,3 +35,6 @@ lerna-debug.log*
 package-lock.json
 yarn.lock
 /dist.tar
+/damageViewer/dataApi/src/main/resources/application.yml
+/damageViewer/dataApi/src/main/resources/application-prod.yml
+/damageViewer/dataApi/src/main/resources/token-private-key.txt

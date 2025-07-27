@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.game.dao.AttributeDao">
+
+    <resultMap type="xyz.game.entity.custom.AttributeReq" id="AttributeMap">
+        <result property="attributeId" column="attribute_id" jdbcType="INTEGER"/>
+        <result property="attributeName" column="attribute_name" jdbcType="VARCHAR"/>
+        <result property="attributeImg" column="attribute_img" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="AttributeMap">
+        select
+            attribute_id,attribute_img
+        from attribute
+        where attribute_id = #{attributeId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="query" resultMap="AttributeMap">
+        select
+attribute_id,attribute_img
+        from attribute
+        <where>
+            <if test="attributeId != null">
+                and attribute_id = #{attributeId}
+            </if>
+            <if test="attributeImg != null and attributeImg != ''">
+                and attribute_img = #{attributeImg}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryJoin" resultMap="AttributeMap">
+        select
+        a.attribute_id,attribute_img,b.attribute_name
+        from attribute a
+            left join attribute_name b
+        on a.attribute_id = b.attribute_id
+        <where>
+            <if test="attributeId != null and attributeId != ''">
+                and attribute_id = #{attributeId}
+            </if>
+            <if test="attributeImg != null and attributeImg != ''">
+                and attribute_img = #{attributeImg}
+            </if>
+            <if test="attributeName != null and attributeName != ''">
+                and attributeName = #{attributeName}
+            </if>
+            <if test="type != null and type != ''">
+                and type = #{type}
+            </if>
+        </where>
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from attribute
+        <where>
+            <if test="attributeId != null">
+                and attribute_id = #{attributeId}
+            </if>
+            <if test="attributeImg != null and attributeImg != ''">
+                and attribute_img = #{attributeImg}
+            </if>
+        </where>
+    </select>
+
+    <select id="maxId" resultType="java.lang.Integer">
+        select max(attribute_id)
+        from attribute
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" parameterType="xyz.game.entity.Attribute">
+        insert into attribute(attribute_id,attribute_img)
+        values (#{attributeId},#{attributeImg})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="attributeId" useGeneratedKeys="true">
+        insert into attribute(attribute_img)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.attributeImg})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="attributeId" useGeneratedKeys="true">
+        insert into attribute(attribute_img)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.attributeImg})
+        </foreach>
+        on duplicate key update
+attribute_img = values(attribute_img)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update attribute
+        <set>
+            <if test="attributeImg != null and attributeImg != ''">
+                attribute_img = #{attributeImg},
+            </if>
+        </set>
+        where attribute_id = #{attributeId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from attribute where attribute_id = #{attributeId}
+    </delete>
+
+</mapper>
+

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.game.dao.IndivNameDao">
+
+    <resultMap type="xyz.game.entity.IndivName" id="IndivNameMap">
+        <result property="indivId" column="indiv_id" jdbcType="INTEGER"/>
+        <result property="languageId" column="language_id" jdbcType="INTEGER"/>
+        <result property="indivName" column="indiv_name" jdbcType="VARCHAR"/>
+        <result property="indivImg" column="indiv_img" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="maxId" resultType="java.lang.Integer">
+        select
+        max(indiv_id)
+        from ${whichGame}.indiv_name
+    </select>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="IndivNameMap">
+        select
+        indiv_id,language_id,indiv_name
+        from ${whichGame}.indiv_name
+        where indiv_id = #{indivId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="query" resultMap="IndivNameMap">
+        select
+        indiv_id,language_id,indiv_name
+        from indiv_name
+        <where>
+            <if test="indivId != null">
+                and indiv_id = #{indivId}
+            </if>
+            <if test="languageId != null">
+                and language_id = #{languageId}
+            </if>
+            <if test="indivName != null and indivName != ''">
+                and indiv_name = #{indivName}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryImg" resultMap="IndivNameMap">
+        select
+        indiv_id,indiv_img
+        from individual
+        <where>
+            <if test="indivId != null">
+                and indiv_id = #{indivId}
+            </if>
+        </where>
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from ${whichGame}.indiv_name
+        <where>
+            <if test="indivId != null">
+                and indiv_id = #{indivId}
+            </if>
+            <if test="languageId != null">
+                and language_id = #{languageId}
+            </if>
+            <if test="indivName != null and indivName != ''">
+                and indiv_name = #{indivName}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="indivId" useGeneratedKeys="true">
+        insert into ${whichGame}.indiv_name(indiv_id,indiv_name)
+        values (#{indivId},#{indivName})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="indivId" useGeneratedKeys="true">
+        insert into ${whichGame}.indiv_name(indiv_name)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.indivName})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="indivId" useGeneratedKeys="true">
+        insert into ${whichGame}.indiv_name(indiv_name)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.indivName})
+        </foreach>
+        on duplicate key update
+        indiv_name = values(indiv_name)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update ${whichGame}.indiv_name
+        <set>
+            <if test="indivName != null and indivName != ''">
+                indiv_name = #{indivName},
+            </if>
+        </set>
+        where indiv_id = #{indivId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from ${whichGame}.indiv_name where indiv_id = #{indivId}
+    </delete>
+
+</mapper>
+

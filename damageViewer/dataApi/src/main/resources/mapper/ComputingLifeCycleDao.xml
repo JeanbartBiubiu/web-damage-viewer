@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.game.dao.ComputingLifeCycleDao">
+
+    <resultMap type="xyz.game.entity.ComputingLifeCycle" id="ComputingLifeCycleMap">
+        <result property="cycleId" column="cycle_id" jdbcType="INTEGER"/>
+        <result property="cycleOrder" column="cycle_order" jdbcType="INTEGER"/>
+        <result property="cycleType" column="type" jdbcType="VARCHAR"/>
+        <result property="cycleCode" column="code" jdbcType="VARCHAR"/>
+        <result property="cycleName" column="name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="ComputingLifeCycleMap">
+        select
+cycle_id,cycle_order,type,code,name
+        from computing_life_cycle
+        where cycle_id = #{cycleId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="query" resultMap="ComputingLifeCycleMap">
+        select
+            cycle_id,cycle_order,type,code,name
+        from computing_life_cycle
+        <where>
+            <if test="cycleId != null">
+                and cycle_order = #{cycleId}
+            </if>
+            <if test="cycleOrder != null">
+                and cycleOrder = #{cycleOrder}
+            </if>
+            <if test="cycleType != null and cycleType != ''">
+                and type = #{cycleType}
+            </if>
+            <if test="cycleCode != null and cycleCode != ''">
+                and code = #{cycleCode}
+            </if>
+            <if test="cycleName != null and cycleName != ''">
+                and name = #{cycleName}
+            </if>
+        </where>
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from computing_life_cycle
+        <where>
+            <if test="cycleId != null">
+                and cycle_id = #{cycleId}
+            </if>
+            <if test="order != null">
+                and order = #{order}
+            </if>
+            <if test="type != null and type != ''">
+                and type = #{type}
+            </if>
+            <if test="code != null and code != ''">
+                and code = #{code}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="cycleId" useGeneratedKeys="true">
+        insert into
+        computing_life_cycle
+        (cycle_id,cycle_order,type,code,name)
+        values (
+        #{cycleId},
+        #{cycleOrder},
+        #{cycleType},
+        #{cycleCode},
+        #{cycleName})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="cycleId" useGeneratedKeys="true">
+        insert into computing_life_cycle(ordercodename)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.order}#{entity.code}#{entity.name})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="cycleId" useGeneratedKeys="true">
+        insert into computing_life_cycle(ordercodename)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.order}#{entity.code}#{entity.name})
+        </foreach>
+        on duplicate key update
+order = values(order)code = values(code)name = values(name)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update computing_life_cycle
+        <set>
+            <if test="cycleType != null">
+                type = #{cycleType},
+            </if>
+            <if test="cycleOrder != null">
+                cycle_order = #{cycleOrder},
+            </if>
+            <if test="cycleCode != null and cycleCode != ''">
+                code = #{cycleCode},
+            </if>
+            <if test="cycleName != null and cycleName != ''">
+                name = #{cycleName},
+            </if>
+        </set>
+        where cycle_id = #{cycleId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from computing_life_cycle where cycle_id = #{cycleId}
+    </delete>
+
+</mapper>
+

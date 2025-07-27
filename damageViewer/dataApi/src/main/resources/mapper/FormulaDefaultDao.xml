@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.game.dao.FormulaDefaultDao">
+
+    <resultMap type="xyz.game.entity.FormulaDefault" id="FormulaDefaultMap">
+        <result property="formulaId" column="formula_id" jdbcType="INTEGER"/>
+        <result property="formulaType" column="formula_type" jdbcType="VARCHAR"/>
+        <result property="defaultV" column="default_v" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="FormulaDefaultMap">
+        select
+formula_idformula_typedefault_v
+        from ${whichGame}.formula_default
+        where formula_id = #{formulaId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="query" resultMap="FormulaDefaultMap">
+        select
+formula_idformula_typedefault_v
+        from ${whichGame}.formula_default
+        <where>
+            <if test="formulaId != null">
+                and formula_id = #{formulaId}
+            </if>
+            <if test="formulaType != null and formulaType != ''">
+                and formula_type = #{formulaType}
+            </if>
+            <if test="defaultV != null and defaultV != ''">
+                and default_v = #{defaultV}
+            </if>
+        </where>
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from ${whichGame}.formula_default
+        <where>
+            <if test="formulaId != null">
+                and formula_id = #{formulaId}
+            </if>
+            <if test="formulaType != null and formulaType != ''">
+                and formula_type = #{formulaType}
+            </if>
+            <if test="defaultV != null and defaultV != ''">
+                and default_v = #{defaultV}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="formulaId" useGeneratedKeys="true">
+        insert into ${whichGame}.formula_default(default_v)
+        values (#{defaultV})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="formulaId" useGeneratedKeys="true">
+        insert into ${whichGame}.formula_default(default_v)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.defaultV})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="formulaId" useGeneratedKeys="true">
+        insert into ${whichGame}.formula_default(default_v)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.defaultV})
+        </foreach>
+        on duplicate key update
+default_v = values(default_v)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update ${whichGame}.formula_default
+        <set>
+            <if test="defaultV != null and defaultV != ''">
+                default_v = #{defaultV},
+            </if>
+        </set>
+        where formula_id = #{formulaId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from ${whichGame}.formula_default where formula_id = #{formulaId}
+    </delete>
+
+</mapper>
+

@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.game.dao.DDLDao">
+
+    <update id="createDb">
+        create database ${gameCode}
+    </update>
+
+    <update id="createTableAttribute">
+        CREATE TABLE ${gameCode}.`attribute` (
+                                     `attribute_id` int unsigned NOT NULL AUTO_INCREMENT,
+                                     `attribute_img` varchar(100) DEFAULT NULL COMMENT '属性图片',
+                                     PRIMARY KEY (`attribute_id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='属性表';
+    </update>
+
+    <update id="createTableAttributeName">
+        CREATE TABLE ${gameCode}.`attribute_name` (
+                                          `attribute_id` int unsigned NOT NULL,
+                                          `language_id` int unsigned NOT NULL,
+                                          `attribute_name` varchar(100) NOT NULL,
+                                          PRIMARY KEY (`attribute_id`,`language_id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='属性名称表';
+    </update>
+
+    <update id="createTableAttributeValue">
+        -- default_table.attribute_value definition
+
+        CREATE TABLE ${gameCode}.`attribute_value` (
+                                           `indiv_id` int unsigned NOT NULL,
+                                           `attribute_id` int unsigned NOT NULL,
+                                           `level_id` int unsigned NOT NULL,
+                                           `value` int unsigned NOT NULL
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='单位-属性-等级对应数据数值';
+
+    </update>
+
+    <update id="createTableComputingLifeCycle">
+        -- default_table.computing_life_cycle definition
+
+        CREATE TABLE ${gameCode}.`computing_life_cycle` (
+                                                `cycle_id` int NOT NULL AUTO_INCREMENT,
+                                                `order` int DEFAULT '1',
+                                                `type` varchar(10) NOT NULL,
+                                                `code` varchar(100) DEFAULT NULL,
+                                                `name` varchar(100) DEFAULT NULL,
+                                                PRIMARY KEY (`cycle_id`,`type`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+    </update>
+
+    <update id="createTableEquipId">
+        -- default_table.equip_id definition
+
+        CREATE TABLE ${gameCode}.`equip_id` (
+                                    `equip_id` int NOT NULL,
+                                    `skill_id` int NOT NULL
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+    </update>
+
+    <update id="createTableEquipment">
+        -- default_table.equipment definition
+
+        CREATE TABLE ${gameCode}.`equipment` (
+                                     `equip_id` int unsigned NOT NULL AUTO_INCREMENT,
+                                     `equip_img` varchar(100) DEFAULT NULL,
+                                     `consumption` int NOT NULL DEFAULT '0',
+                                     `attribute_expression` varchar(1024) NOT NULL COMMENT '增加的属性数值表达式',
+                                     PRIMARY KEY (`equip_id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='装备表(buff等状态效果也定义为装备)';
+
+    </update>
+
+    <update id="createTableEquipmentName">
+        -- default_table.equipment_name definition
+
+        CREATE TABLE ${gameCode}.`equipment_name` (
+                                          `equip_id` int unsigned NOT NULL,
+                                          `language_id` int unsigned NOT NULL,
+                                          `equip_name` varchar(100) NOT NULL,
+                                          PRIMARY KEY (`language_id`,`equip_id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+    </update>
+
+    <update id="createTableFormulaDefault">
+        -- default_table.formula_default definition
+
+        CREATE TABLE ${gameCode}.`formula_default` (
+                                           `formula_id` int NOT NULL AUTO_INCREMENT,
+                                           `formula_type` varchar(100) NOT NULL,
+                                           `default_v` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+                                           PRIMARY KEY (`formula_id`,`formula_type`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+    </update>
+
+    <update id="createTableFormulaImpl">
+        -- default_table.formula_impl definition
+
+        CREATE TABLE ${gameCode}.`formula_impl` (
+                                        `attribute_id` int NOT NULL,
+                                        `formula_id` int NOT NULL,
+                                        `formula_impl` varchar(1000) NOT NULL
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+    </update>
+
+    <update id="createTableIndividual">
+        -- default_table.indiv_name definition
+
+        CREATE TABLE ${gameCode}.`indiv_name` (
+                                      `indiv_id` int unsigned NOT NULL,
+                                      `language_id` int unsigned NOT NULL,
+                                      `indiv_name` varchar(100) NOT NULL,
+                                      PRIMARY KEY (`indiv_id`,`language_id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+    </update>
+
+    <update id="createTableIndivName">
+        -- default_table.indiv_skill definition
+
+        CREATE TABLE ${gameCode}.`indiv_skill` (
+                                       `indiv_id` int NOT NULL,
+                                       `skill_id` int NOT NULL
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='人物-技能关联表';
+
+    </update>
+
+    <update id="createTableIndivSkill">
+        -- default_table.individual definition
+
+        CREATE TABLE ${gameCode}.`individual` (
+                                      `indiv_id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '英雄单位标识',
+                                      `indiv_img` varchar(100) DEFAULT NULL COMMENT '头像',
+                                      PRIMARY KEY (`indiv_id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+    </update>
+
+    <update id="createTableLanguage">
+        -- default_table.`language` definition
+
+        CREATE TABLE ${gameCode}.`language` (
+                                    `language_id` int unsigned NOT NULL AUTO_INCREMENT,
+                                    `language_name` varchar(20) DEFAULT NULL,
+                                    PRIMARY KEY (`language_id`)
+        ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+    </update>
+
+    <update id="createTableLevel">
+        -- default_table.`level` definition
+
+        CREATE TABLE ${gameCode}.`level` (
+                                 `level_id` int unsigned NOT NULL,
+                                 `language_id` int unsigned NOT NULL,
+                                 `level_name` varchar(100) DEFAULT NULL,
+                                 PRIMARY KEY (`level_id`,`language_id`),
+                                 KEY `level_level_id_IDX` (`level_id`,`language_id`) USING BTREE
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='等级定义表';
+
+    </update>
+
+    <update id="createTableSkillDef">
+        -- default_table.skill_def definition
+
+        CREATE TABLE ${gameCode}.`skill_def` (
+                                     `skill_id` int NOT NULL AUTO_INCREMENT,
+                                     `skill_name` varchar(100) NOT NULL,
+                                     `skill_img` varchar(100) DEFAULT NULL,
+                                     `skill_type` varchar(100) DEFAULT NULL,
+                                     PRIMARY KEY (`skill_id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='技能定义表';
+
+    </update>
+
+    <update id="createTableSkillSub">
+        -- default_table.skill_sub definition
+
+        CREATE TABLE ${gameCode}.`skill_sub` (
+                                     `skill_id` int NOT NULL,
+                                     `skill_levle` int NOT NULL DEFAULT '1',
+                                     `cycle_id` int NOT NULL,
+                                     `consumption` varchar(100) NOT NULL DEFAULT '0',
+                                     `cd` varchar(100) NOT NULL DEFAULT '0',
+                                     `check_and_do` varchar(2048) NOT NULL,
+                                     PRIMARY KEY (`skill_id`,`skill_levle`,`cycle_id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+    </update>
+
+    <update id="createTableVersion">
+        -- default_table.version definition
+
+        CREATE TABLE ${gameCode}.`version` (
+                                   `version_id` int unsigned NOT NULL AUTO_INCREMENT,
+                                   `version_code` varchar(100) NOT NULL,
+                                   `update_time` datetime NOT NULL,
+                                   PRIMARY KEY (`version_id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='版本记录';
+    </update>
+
+
+</mapper>
+

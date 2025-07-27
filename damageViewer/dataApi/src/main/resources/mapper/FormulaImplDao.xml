@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.game.dao.FormulaImplDao">
+
+    <resultMap type="xyz.game.entity.FormulaImpl" id="FormulaImplMap">
+        <result property="attributeId" column="attribute_id" jdbcType="INTEGER"/>
+        <result property="formulaId" column="formula_id" jdbcType="INTEGER"/>
+        <result property="formulaImpl" column="formula_impl" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="FormulaImplMap">
+        select
+attribute_idformula_idformula_impl
+        from ${whichGame}.formula_impl
+        where  = #{}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="query" resultMap="FormulaImplMap">
+        select
+attribute_idformula_idformula_impl
+        from ${whichGame}.formula_impl
+        <where>
+            <if test="attributeId != null">
+                and attribute_id = #{attributeId}
+            </if>
+            <if test="formulaId != null">
+                and formula_id = #{formulaId}
+            </if>
+            <if test="formulaImpl != null and formulaImpl != ''">
+                and formula_impl = #{formulaImpl}
+            </if>
+        </where>
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from ${whichGame}.formula_impl
+        <where>
+            <if test="attributeId != null">
+                and attribute_id = #{attributeId}
+            </if>
+            <if test="formulaId != null">
+                and formula_id = #{formulaId}
+            </if>
+            <if test="formulaImpl != null and formulaImpl != ''">
+                and formula_impl = #{formulaImpl}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="" useGeneratedKeys="true">
+        insert into ${whichGame}.formula_impl(attribute_idformula_idformula_impl)
+        values (#{attributeId}#{formulaId}#{formulaImpl})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="" useGeneratedKeys="true">
+        insert into ${whichGame}.formula_impl(attribute_idformula_idformula_impl)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.attributeId}#{entity.formulaId}#{entity.formulaImpl})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="" useGeneratedKeys="true">
+        insert into ${whichGame}.formula_impl(attribute_idformula_idformula_impl)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.attributeId}#{entity.formulaId}#{entity.formulaImpl})
+        </foreach>
+        on duplicate key update
+attribute_id = values(attribute_id)formula_id = values(formula_id)formula_impl = values(formula_impl)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update ${whichGame}.formula_impl
+        <set>
+            <if test="attributeId != null">
+                attribute_id = #{attributeId},
+            </if>
+            <if test="formulaId != null">
+                formula_id = #{formulaId},
+            </if>
+            <if test="formulaImpl != null and formulaImpl != ''">
+                formula_impl = #{formulaImpl},
+            </if>
+        </set>
+        where  = #{}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from ${whichGame}.formula_impl where  = #{}
+    </delete>
+
+</mapper>
+

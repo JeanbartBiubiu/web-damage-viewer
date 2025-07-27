@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.game.dao.LevelDao">
+
+    <resultMap type="xyz.game.entity.Level" id="LevelMap">
+        <result property="levelId" column="level_id" jdbcType="INTEGER"/>
+        <result property="languageId" column="language_id" jdbcType="INTEGER"/>
+        <result property="levelName" column="level_name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="LevelMap">
+        select
+            level_id,language_id,level_name
+        from level
+        where level_id = #{levelId}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="query" resultMap="LevelMap">
+        select
+            level_id,language_id,level_name
+        from level
+        <where>
+            <if test="levelId != null">
+                and level_id = #{levelId}
+            </if>
+            <if test="languageId != null">
+                and language_id = #{languageId}
+            </if>
+            <if test="levelName != null and levelName != ''">
+                and level_name = #{levelName}
+            </if>
+        </where>
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="java.lang.Long">
+        select count(1)
+        from level
+        <where>
+            <if test="levelId != null">
+                and level_id = #{levelId}
+            </if>
+            <if test="languageId != null">
+                and language_id = #{languageId}
+            </if>
+            <if test="levelName != null and levelName != ''">
+                and level_name = #{levelName}
+            </if>
+        </where>
+    </select>
+
+    <select id="maxId" resultType="java.lang.Integer">
+        select max(level_id)
+        from level
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert">
+        insert into level(level_id,level_name)
+        values (#{levelId},#{levelName})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="levelId" useGeneratedKeys="true">
+        insert into level(level_name)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+        (#{entity.levelName})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="levelId" useGeneratedKeys="true">
+        insert into level(level_name)
+        values
+        <foreach collection="entities" item="entity" separator=",">
+            (#{entity.levelName})
+        </foreach>
+        on duplicate key update
+level_name = values(level_name)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update level
+        <set>
+            <if test="levelName != null and levelName != ''">
+                level_name = #{levelName},
+            </if>
+        </set>
+        where level_id = #{levelId}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from level where level_id = #{levelId}
+    </delete>
+
+</mapper>
+
