@@ -38,3 +38,6 @@ yarn.lock
 /damageViewer/dataApi/src/main/resources/application.yml
 /damageViewer/dataApi/src/main/resources/application-prod.yml
 /damageViewer/dataApi/src/main/resources/token-private-key.txt
+/api/src/main/resources/application.yml
+/api/src/main/resources/application-prod.yml
+/api/src/main/resources/token-private-key.txt
