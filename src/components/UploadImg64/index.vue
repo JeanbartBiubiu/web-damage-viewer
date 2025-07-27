@@ -19,10 +19,14 @@ import { ref, watch } from "vue"
 import { Plus } from "@element-plus/icons-vue"
 import { Jimp } from "jimp"
 
-import type { UploadProps } from "element-plus"
+import { ElMessage, UploadProps } from "element-plus"
+import { Image } from "@/api/image/types/image"
+import { updateImage } from "@/api/image"
 
 // 定义 props 和 emits
 const props = defineProps<{
+  type: string
+  id: number | undefined
   img: string | undefined
 }>()
 const emits = defineEmits(["update:img"])
@@ -41,10 +45,13 @@ watch(
 const handleUpload: UploadProps["onChange"] = (uploadFile) => {
   const file = uploadFile.raw!
   const reader = new FileReader()
-  console.log(file)
+  console.log(reader)
   reader.onload = async (e) => {
     console.log(e)
+    console.log(e.target)
+    console.log(e.target?.result)
     if (e.target?.result) {
+      console.log("okk")
       const image = await Jimp.read(e.target.result as ArrayBuffer)
       // 裁切成正方形
       const height = image.height
@@ -60,10 +67,28 @@ const handleUpload: UploadProps["onChange"] = (uploadFile) => {
       imageUrl.value = base64
       // 触发 update:model-value 事件，更新父组件的 v-model 值
       emits("update:img", imageUrl.value)
-      console.log(imageUrl.value)
-      console.log("----")
-      console.log(props.img)
+      console.log("uri")
+      if (props.id !== undefined) {
+        const imageData: Image = {
+          uri: props.type + "_" + props.id,
+          image: base64,
+          createTime: undefined,
+          updateTime: undefined
+        }
+        try {
+          const result = await updateImage(imageData)
+          console.log("图片更新成功", result)
+        } catch (error) {
+          console.error("图片更新失败", error)
+        }
+      } else {
+        ElMessage.error("请创建完后再更新图片")
+      }
     }
+  }
+  // 监听文件读取错误事件
+  reader.onerror = (error) => {
+    console.error("文件读取错误:", error)
   }
   reader.readAsArrayBuffer(file)
 }

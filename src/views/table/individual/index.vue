@@ -21,9 +21,9 @@ import {
   settingHolisticValue
 } from "@/api/individual/types/individual"
 import { type FormInstance, type FormRules, ElMessage, ElMessageBox } from "element-plus"
-import { Search, Refresh, CirclePlus, Delete, Download, RefreshRight } from "@element-plus/icons-vue"
+import { CirclePlus, Delete, Download, RefreshRight } from "@element-plus/icons-vue"
 import { usePagination } from "@/hooks/usePagination"
-import { cloneDeep, update } from "lodash-es"
+import { cloneDeep } from "lodash-es"
 import UploadImg64 from "@/components/UploadImg64/index.vue"
 
 defineOptions({
@@ -136,11 +136,6 @@ const searchData = reactive({
   indivId: 0,
   indivName: ""
 })
-interface tableStruct {
-  attributeName: string
-  value1: number
-  value2: number
-}
 const getTableData = () => {
   loading.value = true
   getIndiv({
@@ -218,7 +213,7 @@ const getAttributeData = (params: IndivRequestData) => {
         valueMap.value?.get(element.levelId)?.set(element.indivId, element)
         attributeValues.value.push(element)
 
-        settingHolisticValue(element.levelId, element.value, settingTableMapValue.value?.get(element.attributeId)!)
+        settingHolisticValue(element.levelId, element.value, settingTableMapValue.value?.get(element.attributeId))
       })
       while (settingTableListValue.value.length) {
         settingTableListValue.value.pop()
@@ -362,7 +357,7 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getTabl
     >
       <el-form ref="formRef" :model="formData" :rules="formRules" label-width="100px" label-position="left">
         <el-form-item prop="indivImg" label="头像">
-          <UploadImg64 :img="formData.indivImg" @update:img="updateImg" />
+          <UploadImg64 :type="'individual'" :id="formData.indivId" :img="formData.indivImg" @update:img="updateImg" />
         </el-form-item>
         <el-form-item prop="indivName" label="角色名">
           <el-input v-model="formData.indivName" placeholder="请输入" />

@@ -93,7 +93,6 @@ const handleUpdate = (row: GetEquipmentData) => {
       ElMessage.error("获取装备详情失败")
     })
     .finally(() => {
-      console.log("editData 数据:", formData.value)
       loading.value = false
     })
 }
@@ -136,6 +135,8 @@ const resetSearch = () => {
 }
 
 const updateImg = (img: string) => {
+  console.log("img")
+  console.log(img)
   formData.value.equipmentImg = img
 }
 //#endregion
@@ -223,8 +224,13 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getTabl
         <el-form-item prop="equipmentName" label="装备名">
           <el-input v-model="formData.equipmentName" placeholder="请输入" />
         </el-form-item>
-        <el-form-item prop="equipmentImg" label="头像">
-          <UploadImg64 :img="formData.equipmentImg" @update:img="updateImg" />
+        <el-form-item prop="equipmentImg" label="图片" v-if="formData.equipmentId !== undefined">
+          <UploadImg64
+            :type="'equipment'"
+            :id="formData.equipmentId"
+            :img="formData.equipmentImg"
+            @update:img="updateImg"
+          />
         </el-form-item>
         <el-form-item prop="consumption" label="价格">
           <el-input-number v-model="formData.consumption" placeholder="请输入" />
