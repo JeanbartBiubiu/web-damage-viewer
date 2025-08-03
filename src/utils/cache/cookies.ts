@@ -3,10 +3,8 @@ export const getToken = () => {
 }
 
 export const getCurrentSchema = () => {
-  return localStorage.getItem("currentSchema")
+  return localStorage.getItem("currentSchema") || "default_table"
 }
 
-export const setToken = (token: string) => {
-}
-export const removeToken = () => {
-}
+export const setToken = (token: string) => {}
+export const removeToken = () => {}

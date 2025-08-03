@@ -8,6 +8,8 @@ import { usePagination } from "@/hooks/usePagination"
 import { cloneDeep } from "lodash-es"
 import UploadImg64 from "@/components/UploadImg64/index.vue"
 import EquipmentValueSetting from "@/components/EquipmentValueSetting/index.vue"
+import { getCurrentSchema } from "@/utils/cache/cookies"
+import ImageColumn from "@/components/ImageColumn/index.vue"
 
 defineOptions({
   // 命名当前组件
@@ -106,6 +108,7 @@ const searchData = reactive({
   equipmentName: "",
   type: 1
 })
+
 const getTableData = () => {
   loading.value = true
   getEquipment({
@@ -115,11 +118,12 @@ const getTableData = () => {
     equipmentName: searchData.equipmentName || "",
     type: searchData.type || undefined
   })
-    .then(({ data }) => {
+    .then(async ({ data }) => {
       paginationData.total = data.total
       tableData.value = data.list
     })
-    .catch(() => {
+    .catch((error) => {
+      console.error("获取装备列表失败:", error)
       tableData.value = []
     })
     .finally(() => {
@@ -135,12 +139,9 @@ const resetSearch = () => {
 }
 
 const updateImg = (img: string) => {
-  console.log("img")
-  console.log(img)
   formData.value.equipmentImg = img
 }
 //#endregion
-
 /** 监听分页参数的变化 */
 watch([() => paginationData.currentPage, () => paginationData.pageSize], getTableData, { immediate: true })
 </script>
@@ -181,12 +182,7 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getTabl
           <el-table-column type="selection" width="50" align="center" />
           <el-table-column prop="equipmentImg" width="128" label="图片" align="center">
             <template #default="scope">
-              <el-image
-                :src="scope.row.equipmentImg"
-                :preview-src-list="[scope.row.equipmentImg]"
-                fit="cover"
-                style="width: 50px; height: 50px; border-radius: 4px"
-              />
+              <ImageColumn :game="getCurrentSchema()" type="equipment" :id="scope.row.equipmentId" />
             </template>
           </el-table-column>
           <el-table-column prop="equipmentId" label="装备id" align="center" />
@@ -226,6 +222,7 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getTabl
         </el-form-item>
         <el-form-item prop="equipmentImg" label="图片" v-if="formData.equipmentId !== undefined">
           <UploadImg64
+            :game="getCurrentSchema()"
             :type="'equipment'"
             :id="formData.equipmentId"
             :img="formData.equipmentImg"

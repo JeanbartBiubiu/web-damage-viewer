@@ -15,16 +15,18 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from "vue"
+import { ref, watch, onMounted } from "vue"
 import { Plus } from "@element-plus/icons-vue"
 import { Jimp } from "jimp"
 
 import { ElMessage, UploadProps } from "element-plus"
 import { Image } from "@/api/image/types/image"
 import { updateImage } from "@/api/image"
+import { imageManager } from "@/utils/image/image_manager"
 
 // 定义 props 和 emits
 const props = defineProps<{
+  game: string
   type: string
   id: number | undefined
   img: string | undefined
@@ -33,6 +35,24 @@ const emits = defineEmits(["update:img"])
 
 // 使用 props 中的 modelValue 作为初始值
 const imageUrl = ref(props.img)
+
+// 在组件挂载时尝试从IndexDB获取图片
+onMounted(async () => {
+  if (props.id !== undefined) {
+    try {
+      const uri = `${props.game}_${props.type}_${props.id}`
+      const imageData = await imageManager.getImageByUri(uri)
+      console.log(imageData)
+      if (imageData) {
+        imageUrl.value = imageData
+        // 触发 update:img 事件，更新父组件的值
+        emits("update:img", imageUrl.value)
+      }
+    } catch (error) {
+      console.error("从IndexDB获取图片失败:", error)
+    }
+  }
+})
 
 // 监听 props.img 的变化
 watch(
@@ -69,15 +89,30 @@ const handleUpload: UploadProps["onChange"] = (uploadFile) => {
       emits("update:img", imageUrl.value)
       console.log("uri")
       if (props.id !== undefined) {
+        const api_uri = `${props.type}_${props.id}`
+        const uri = `${props.game}_${props.type}_${props.id}`
         const imageData: Image = {
-          uri: props.type + "_" + props.id,
+          uri: api_uri,
           image: base64,
           createTime: undefined,
           updateTime: undefined
         }
         try {
+          // 更新到服务器
           const result = await updateImage(imageData)
           console.log("图片更新成功", result)
+
+          // 同步更新到IndexDB
+          const now = new Date().toISOString()
+          await imageManager.batchInsert([
+            {
+              uri: uri,
+              image: base64,
+              create_time: now,
+              update_time: now
+            }
+          ])
+          console.log("图片已同步到IndexDB")
         } catch (error) {
           console.error("图片更新失败", error)
         }

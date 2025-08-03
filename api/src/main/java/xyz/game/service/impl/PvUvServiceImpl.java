@@ -37,7 +37,7 @@ public class PvUvServiceImpl extends ServiceImpl<PvUvMapper, PvUv> implements Pv
         // 示例中假设 PvUvMapper 有一个方法来查询近 30 天的数据
         return this.baseMapper.selectList(
                 new QueryWrapper<PvUv>()
-                        .ge("hour", thirtyDaysAgo.toEpochSecond(ZoneOffset.UTC)/3600000)
+                        .ge("hour", thirtyDaysAgo.toEpochSecond(ZoneOffset.UTC)/3600)
         );
     }
 }

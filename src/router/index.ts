@@ -211,6 +211,15 @@ export const constantRoutes: RouteRecordRaw[] = [
           title: "rtc p2p交换数据测试",
           keepAlive: true
         }
+      },
+      {
+        path: "image-upload",
+        component: () => import("@/views/example/image-upload-demo.vue"),
+        name: "ImageUploadDemo",
+        meta: {
+          title: "图片上传示例",
+          keepAlive: true
+        }
       }
     ]
   },

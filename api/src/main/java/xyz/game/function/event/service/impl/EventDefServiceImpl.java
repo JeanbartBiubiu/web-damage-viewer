@@ -3,7 +3,6 @@ package xyz.game.function.event.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.game.dao.event.EventDefMapper;
@@ -44,7 +43,6 @@ public class EventDefServiceImpl extends ServiceImpl<EventDefMapper, EventDef> i
         return events;
     }
 
-    @NotNull
     private static Map<Integer, List<Integer>> getIntegerListMap(List<EventType> eventTypes) {
         Map<Integer,List<Integer>> typeMapping = new HashMap<>();
         for (EventType eventType : eventTypes) {

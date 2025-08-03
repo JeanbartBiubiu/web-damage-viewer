@@ -41,3 +41,4 @@ yarn.lock
 /api/src/main/resources/application.yml
 /api/src/main/resources/application-prod.yml
 /api/src/main/resources/token-private-key.txt
+/api/target/
