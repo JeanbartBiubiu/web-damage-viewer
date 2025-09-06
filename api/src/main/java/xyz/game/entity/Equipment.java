@@ -16,7 +16,6 @@ public class Equipment implements Serializable {
 
     private Integer equipmentId;
 
-    private String equipmentImg;
     private String equipmentName;
 
     // 价格

@@ -11,8 +11,6 @@ public class EquipmentReq {
     private Integer languageId;
     private String equipmentName;
 
-    private String equipmentImg;
-
     private Integer consumption;
     private String attributeExpression;
 

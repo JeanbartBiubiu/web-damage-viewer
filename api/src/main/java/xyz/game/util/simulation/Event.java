@@ -13,6 +13,9 @@ public class Event {
     private List<Doing> doings;
     private Double qianyao;
     private Double houyao;
+
+    // 订阅事件
+    private List<Event> subEvents;
 }
 
 @Data

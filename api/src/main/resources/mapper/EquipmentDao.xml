@@ -4,7 +4,6 @@
 
     <resultMap type="xyz.game.entity.Equipment" id="EquipmentMap">
         <result property="equipmentId" column="equip_id" jdbcType="INTEGER"/>
-        <result property="equipmentImg" column="equip_img" jdbcType="VARCHAR"/>
         <result property="equipmentName" column="equip_name" jdbcType="VARCHAR"/>
         <result property="consumption" column="consumption" jdbcType="INTEGER"/>
         <result property="attributeExpression" column="attribute_expression" jdbcType="VARCHAR"/>
@@ -19,7 +18,7 @@
     <!--查询单个-->
     <select id="queryById" resultMap="EquipmentMap">
         select
-        a.equip_id,equip_name,equip_img,consumption,attribute_expression,sub_equips
+        a.equip_id,equip_name,consumption,attribute_expression,sub_equips
         from equipment a left join equipment_name b on (a.equip_id = b.equip_id )
         <where>
                 a.equip_id = #{equipmentId}
@@ -29,7 +28,7 @@
     <!--查询指定行数据-->
     <select id="query" resultMap="EquipmentMap">
         select
-            a.equip_id,equip_name,equip_img,consumption,attribute_expression,sub_equips
+            a.equip_id,equip_name,consumption,attribute_expression,sub_equips
         from equipment a left join equipment_name b on (a.equip_id = b.equip_id
             <if test="equipmentName != null and equipmentName != ''">
                 and b.equip_name = #{equipmentName}
@@ -38,9 +37,6 @@
         <where>
             <if test="equipmentId != null">
                 and a.equip_id = #{equipmentId}
-            </if>
-            <if test="equipmentImg != null and equipmentImg != ''">
-                and equip_img = #{equipmentImg}
             </if>
             <if test="consumption != null">
                 and consumption = #{consumption}
@@ -59,9 +55,6 @@
             <if test="equipmentId != null">
                 and equip_id = #{equipmentId}
             </if>
-            <if test="equipmentImg != null and equipmentImg != ''">
-                and equip_img = #{equipmentImg}
-            </if>
             <if test="consumption != null">
                 and consumption = #{consumption}
             </if>
@@ -73,8 +66,8 @@
 
     <!--新增所有列-->
     <insert id="insert" keyProperty="equipId" useGeneratedKeys="true">
-        insert into equipment(equip_id,equip_img,consumption,attribute_expression)
-        values (#{equipmentId},#{equipmentImg},#{consumption},#{attributeExpression})
+        insert into equipment(equip_id,consumption,attribute_expression)
+        values (#{equipmentId},#{consumption},#{attributeExpression})
     </insert>
 
     <insert id="insertBatch" keyProperty="equipId" useGeneratedKeys="true">
@@ -99,9 +92,6 @@ equip_img = values(equip_img)consumption = values(consumption)attribute_expressi
     <update id="update">
         update equipment
         <set>
-            <if test="equipmentImg != null and equipmentImg != ''">
-                equip_img = #{equipmentImg},
-            </if>
             <if test="consumption != null">
                 consumption = #{consumption},
             </if>

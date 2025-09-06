@@ -17,6 +17,7 @@ public class FightObject {
     // 包括装备的技能
     private List<Event> events = new ArrayList<>();
     private List<Equipment> equipments = new ArrayList<>();
+    private Map<String, Counter> counterMapping = new HashMap<>();
 
     public void decAttributeValue(String attributeName, Double value){
         Attribute attribute = attributeMapping.get(attributeName);
@@ -41,7 +42,6 @@ public class FightObject {
     public void initAttributeMappingValue(Map<String, Attribute> attributeMapping){
         attributeMapping.keySet().forEach(key -> {
             Attribute attribute = attributeMapping.get(key);
-            attribute.setMaxValue(attributeMapping.get(key).getMaxValue());
             attribute.setCurrentValue(attributeMapping.get(key).getCurrentValue());
         });
     }

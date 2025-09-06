@@ -2,13 +2,13 @@
 
 # 定义第一个同步函数
 sync_jar() {
-    ssh root@etc 'sh /root/docker/stop.sh'
-    rclone sync ./dataApi/target/dataApi-1.0-SNAPSHOT.jar etc:/root/docker/
+    ssh root@ecs 'sh /root/docker/stop.sh'
+    rclone sync ./target/dataApi-1.0-SNAPSHOT.jar ecs:/root/docker/
 }
 
 # 定义第二个同步函数
 sync_lib() {
-    rclone sync ./dataApi/target/lib etc:/root/docker/lib
+    rclone sync ./target/lib ecs:/root/docker/lib
 }
 
 restart() {
