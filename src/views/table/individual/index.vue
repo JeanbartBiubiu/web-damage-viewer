@@ -25,6 +25,7 @@ import { CirclePlus, Delete, Download, RefreshRight } from "@element-plus/icons-
 import { usePagination } from "@/hooks/usePagination"
 import { cloneDeep } from "lodash-es"
 import UploadImg64 from "@/components/UploadImg64/index.vue"
+import { getCurrentSchema } from "@/utils/cache/cookies"
 
 defineOptions({
   // 命名当前组件
@@ -213,7 +214,10 @@ const getAttributeData = (params: IndivRequestData) => {
         valueMap.value?.get(element.levelId)?.set(element.indivId, element)
         attributeValues.value.push(element)
 
-        settingHolisticValue(element.levelId, element.value, settingTableMapValue.value?.get(element.attributeId))
+        const settingValue = settingTableMapValue.value?.get(element.attributeId)
+        if (settingValue) {
+          settingHolisticValue(element.levelId, element.value, settingValue)
+        }
       })
       while (settingTableListValue.value.length) {
         settingTableListValue.value.pop()
@@ -357,7 +361,13 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getTabl
     >
       <el-form ref="formRef" :model="formData" :rules="formRules" label-width="100px" label-position="left">
         <el-form-item prop="indivImg" label="头像">
-          <UploadImg64 :type="'individual'" :id="formData.indivId" :img="formData.indivImg" @update:img="updateImg" />
+          <UploadImg64
+            :game="getCurrentSchema()"
+            :type="'individual'"
+            :id="formData.indivId"
+            :img="formData.indivImg"
+            @update:img="updateImg"
+          />
         </el-form-item>
         <el-form-item prop="indivName" label="角色名">
           <el-input v-model="formData.indivName" placeholder="请输入" />
