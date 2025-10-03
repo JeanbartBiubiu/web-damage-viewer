@@ -45,6 +45,7 @@
                 and attribute_expression = #{attributeExpression}
             </if>
         </where>
+      order by a.equip_id asc
     </select>
 
     <!--统计总行数-->

@@ -31,7 +31,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Base64;
 
-@Service
+//@Service
 public class EmailServiceImpl extends ServiceImpl<EmailMapper, Email> implements EmailService {
     private final String HuaweiPublicKey = "MIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEAius4X2mlTbLRt5yLcv/tZOUPp9i95Ap7X+ID9sB+30byXbL4P7FBuPyhR6fEKiZezXI9l8c3g5sZniU0P1mWxoCbiE8LmM3X0m0/0fS4VsE8RLWRLgrVQL6bBAZnzlOPYKWX0inz1CCOh3mY+SUQciseXTx13LzYDYbWzNSuQ6l5p0ajkRefEE+a3LNg43nQyaU0S/7gLBCZ2Iqyv3ppLTWMTPThuzX6DxRHEh7cye1XDUW0e7LCQnKuX1hERmPgzwBzRByLJ8NMRmZTcrFXa+Uph0p3JITGHLV+AX2ur1i01RFQnipHZ8Ga68Y2rDqsxBPLb8pHCc3alxeB8tLhQPoQmqHx6VlRZbGYom6fjnMWQw3qGSnHD6TMZlDiwy94r6ARq6dm+xNlZ347f7e7h9v0racIBXkQsCABHYYRPP9Jcn2jD6Y74qT47xGz5yr1O6vQqYfKVNMPcD4cB+uOGlr2lqjEOM93c/PkMbzaP7UhvEVd+WHzV9HbNVgDfSIxAgMBAAE=";
     private final String HuaweiProductId = "461323198429888697";

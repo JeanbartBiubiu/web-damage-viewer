@@ -30,6 +30,21 @@ class Value {
 }
 
 @Data
+class ValueSlot {
+    private String id; // 标识
+    private double value;
+    private int effectiveTime;
+}
+
+@Data
+class CoefficientSlot {
+    private String id; // 标识
+    private double value;
+    private int effectiveTime;
+}
+
+
+@Data
 class CurentValue extends Value {
     private Map<String, ValueSlot> valueSlots;
     private Map<String, CoefficientSlot> coefficientSlots;
@@ -347,18 +362,3 @@ class CurentValue extends Value {
         return coefficientSlots.get(id);
     }
 }
-
-@Data
-class ValueSlot {
-    private String id; // 标识
-    private double value;
-    private int effectiveTime;
-}
-
-@Data
-class CoefficientSlot {
-    private String id; // 标识
-    private double value;
-    private int effectiveTime;
-}
-

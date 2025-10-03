@@ -1,11 +1,6 @@
 package xyz.game.dao;
 
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.springframework.data.domain.Pageable;
-import xyz.game.entity.Attribute;
-
-import java.util.List;
 
 /**
  * 属性表(Attribute)表数据库访问层

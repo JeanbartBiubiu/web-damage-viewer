@@ -16,8 +16,8 @@ import xyz.game.service.EmailService;
  * @author makejava
  * @since 2024-06-23 21:23:34
  */
-@RestController
-@RequestMapping("/login/google")
+//@RestController
+//@RequestMapping("/login/google")
 public class GoogleLoginController {
     /**
      * 服务对象

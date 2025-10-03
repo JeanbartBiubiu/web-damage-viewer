@@ -3,7 +3,8 @@
 <mapper namespace="xyz.game.dao.SchemaDao">
     <!--通过主键删除-->
     <update id="chooseSchema">
-        use ${currentSchema}
+      <!--use ${currentSchema} -->
+      SET search_path TO ${currentSchema}
     </update>
 </mapper>
 

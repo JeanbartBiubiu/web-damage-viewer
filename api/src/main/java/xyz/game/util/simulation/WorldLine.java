@@ -2,6 +2,8 @@ package xyz.game.util.simulation;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import xyz.game.util.simulation.event.BaseEvent;
+import xyz.game.util.simulation.event.Doing;
 
 import java.util.*;
 
@@ -43,7 +45,7 @@ public class WorldLine {
     private void initializeEvents() {
         for (FightObject fightObject : fightObjects) {
             // 初始化每个战斗对象的事件
-            for (Event event : fightObject.getEvents()) {
+            for (BaseEvent event : fightObject.getEvents()) {
                 // 根据事件类型进行不同的初始化
                 initializeEventByType(event, fightObject);
             }
@@ -53,7 +55,7 @@ public class WorldLine {
     /**
      * 根据事件类型初始化事件
      */
-    private void initializeEventByType(Event event, FightObject owner) {
+    private void initializeEventByType(BaseEvent event, FightObject owner) {
         Set<Integer> types = event.getTypes();
 
         if (types.contains(EventType.IMMEDIATE.getType())) {
@@ -104,7 +106,7 @@ public class WorldLine {
      * 执行事件
      */
     private void executeEvent(TimedEvent timedEvent) {
-        Event event = timedEvent.getEvent();
+        BaseEvent event = timedEvent.getEvent();
         FightObject owner = timedEvent.getOwner();
 
         log.debug("执行事件: {} 在时间: {} 由 {} 触发",
@@ -139,8 +141,8 @@ public class WorldLine {
         }
 
         // 处理订阅事件
-        if (event.getSubEvents() != null) {
-            for (Event subEvent : event.getSubEvents()) {
+        if (event.getSubAfterEvents() != null) {
+            for (BaseEvent subEvent : event.getSubAfterEvents()) {
                 triggerDelayedEvent(subEvent, owner);
             }
         }
@@ -368,7 +370,7 @@ public class WorldLine {
     /**
      * 触发延迟事件
      */
-    private void triggerDelayedEvent(Event event, FightObject owner) {
+    private void triggerDelayedEvent(BaseEvent event, FightObject owner) {
         if (event.getTypes().contains(EventType.DELAYED.getType())) {
             // 计算延迟时间（这里可以根据具体逻辑计算）
             double delayTime = calculateDelayTime(event);
@@ -380,7 +382,7 @@ public class WorldLine {
     /**
      * 计算延迟时间
      */
-    private double calculateDelayTime(Event event) {
+    private double calculateDelayTime(BaseEvent event) {
         // 这里可以根据事件的具体属性计算延迟时间
         // 暂时返回固定值
         return 1000.0; // 1秒延迟
@@ -391,7 +393,7 @@ public class WorldLine {
      */
     private void processContinuousEvents() {
         for (FightObject fightObject : fightObjects) {
-            for (Event event : fightObject.getEvents()) {
+            for (BaseEvent event : fightObject.getEvents()) {
                 if (event.getTypes().contains(EventType.CONTINUOUS.getType())) {
                     // 检查持续事件的触发条件
                     if (shouldTriggerContinuousEvent(event, fightObject)) {
@@ -405,7 +407,7 @@ public class WorldLine {
     /**
      * 判断是否应该触发持续事件
      */
-    private boolean shouldTriggerContinuousEvent(Event event, FightObject owner) {
+    private boolean shouldTriggerContinuousEvent(BaseEvent event, FightObject owner) {
         // 这里可以实现具体的持续事件触发条件
         return true;
     }

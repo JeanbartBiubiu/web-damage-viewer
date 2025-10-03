@@ -1,7 +1,7 @@
 package xyz.game.util.simulation;
 
 import lombok.Data;
-
+import xyz.game.util.simulation.event.BaseEvent;
 import java.util.List;
 
 @Data
@@ -12,5 +12,5 @@ public class Equipment {
     // 属性值变更 如增加攻击力、减少韧性等
     private String express;
     // 被动或者主动
-    private List<Event> events;
+    private List<BaseEvent> events;
 }

@@ -2,6 +2,7 @@ package xyz.game.util.simulation;
 
 
 import lombok.Data;
+import xyz.game.util.simulation.event.BaseEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +16,7 @@ public class FightObject {
     private Map<String, Attribute> attributeMapping = new HashMap<>();
 
     // 包括装备的技能
-    private List<Event> events = new ArrayList<>();
+    private List<BaseEvent> events = new ArrayList<>();
     private List<Equipment> equipments = new ArrayList<>();
     private Map<String, Counter> counterMapping = new HashMap<>();
 
@@ -46,7 +47,7 @@ public class FightObject {
         });
     }
 
-    public void linkSkill(List<Event> events){
+    public void linkSkill(List<BaseEvent> events){
         this.events.addAll(events);
     }
 

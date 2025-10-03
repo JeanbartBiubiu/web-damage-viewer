@@ -28,8 +28,8 @@ import java.util.List;
  * @author makejava
  * @since 2024-06-23 21:23:34
  */
-@RestController
-@RequestMapping("/login/huawei")
+//@RestController
+//@RequestMapping("/login/huawei")
 public class HuaweiLoginController {
     /**
      * 服务对象
