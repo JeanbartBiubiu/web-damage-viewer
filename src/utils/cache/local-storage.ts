@@ -176,3 +176,38 @@ export const getPayAuth = async () => {
   return null
 }
 //#endregion
+
+//#region 全局表单数据
+export interface GlobalFormData {
+  [key: string]: any
+}
+
+// 获取全局表单数据
+export const getGlobalFormData = (): GlobalFormData => {
+  const json = localStorage.getItem(CacheKey.GLOBAL_FORM_DATA)
+  return json ? JSON.parse(json) : {}
+}
+
+// 设置全局表单数据
+export const setGlobalFormData = (data: GlobalFormData) => {
+  localStorage.setItem(CacheKey.GLOBAL_FORM_DATA, JSON.stringify(data))
+}
+
+// 更新全局表单数据中的某个字段
+export const updateGlobalFormField = (key: string, value: any) => {
+  const currentData = getGlobalFormData()
+  currentData[key] = value
+  setGlobalFormData(currentData)
+}
+
+// 获取全局表单数据中的某个字段
+export const getGlobalFormField = (key: string, defaultValue: any = null) => {
+  const data = getGlobalFormData()
+  return data[key] !== undefined ? data[key] : defaultValue
+}
+
+// 清除全局表单数据
+export const clearGlobalFormData = () => {
+  localStorage.removeItem(CacheKey.GLOBAL_FORM_DATA)
+}
+//#endregion

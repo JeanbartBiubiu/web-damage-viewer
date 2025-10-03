@@ -220,6 +220,15 @@ export const constantRoutes: RouteRecordRaw[] = [
           title: "图片上传示例",
           keepAlive: true
         }
+      },
+      {
+        path: "global-form-demo",
+        component: () => import("@/views/example/global-form-demo/index.vue"),
+        name: "GlobalFormDemo",
+        meta: {
+          title: "全局表单演示",
+          keepAlive: true
+        }
       }
     ]
   },

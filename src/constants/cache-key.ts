@@ -9,6 +9,7 @@ class CacheKey {
   static readonly VISITED_VIEWS = `${SYSTEM_NAME}-visited-views-key`
   static readonly CACHED_VIEWS = `${SYSTEM_NAME}-cached-views-key`
   static readonly JWT_TOKEN = `token`
+  static readonly GLOBAL_FORM_DATA = `global-form-data-key`
 }
 
 export default CacheKey

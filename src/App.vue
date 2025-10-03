@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { useTheme } from "@/hooks/useTheme"
+import GlobalFormExample from "@/components/GlobalForm/GlobalFormExample.vue"
 // 将 Element Plus 的语言设置为中文
 import zhCn from "element-plus/es/locale/lang/zh-cn"
 
@@ -12,5 +13,7 @@ initTheme()
 <template>
   <el-config-provider :locale="zhCn">
     <router-view />
+    <!-- 全局表单组件 -->
+    <GlobalFormExample />
   </el-config-provider>
 </template>
