@@ -31,7 +31,7 @@ public class PVUVTask implements Job {
         if (redisUtil.tryLock(LOCK_KEY, LOCK_VALUE, LOCK_EXPIRE_TIME, java.util.concurrent.TimeUnit.SECONDS)) {
             try {
                 // 获取当前小时
-                long hour = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) / 3600;
+                long hour = LocalDateTime.now().toEpochSecond(ZoneOffset.ofHours(8)) / 3600;
 
                 // 获取PV和UV数据
                 Long pv = redisUtil.get(RedisUtil.PV) == null ? 0 : Long.parseLong(redisUtil.get(RedisUtil.PV));
