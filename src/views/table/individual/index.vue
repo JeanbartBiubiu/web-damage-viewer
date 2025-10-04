@@ -26,6 +26,7 @@ import { usePagination } from "@/hooks/usePagination"
 import { cloneDeep } from "lodash-es"
 import UploadImg64 from "@/components/UploadImg64/index.vue"
 import { getCurrentSchema } from "@/utils/cache/cookies"
+import ImageColumn from "@/components/ImageColumn/index.vue"
 
 defineOptions({
   // 命名当前组件
@@ -321,9 +322,9 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getTabl
       <div class="table-wrapper">
         <el-table :data="tableData">
           <el-table-column type="selection" width="50" align="center" />
-          <el-table-column prop="indivImg" width="128" label="角色图片" align="center">
+          <el-table-column prop="indivImg" width="128" label="图片" align="center">
             <template #default="scope">
-              <img :src="scope.row.indivImg" alt="" width="50" height="50" />
+              <ImageColumn :game="getCurrentSchema()" type="individual" :id="scope.row.indivId" />
             </template>
           </el-table-column>
           <el-table-column prop="indivId" label="角色id" align="center" />
@@ -360,10 +361,10 @@ watch([() => paginationData.currentPage, () => paginationData.pageSize], getTabl
       width="30%"
     >
       <el-form ref="formRef" :model="formData" :rules="formRules" label-width="100px" label-position="left">
-        <el-form-item prop="indivImg" label="头像">
+        <el-form-item prop="indivImg" label="图片" v-if="formData.indivId !== undefined">
           <UploadImg64
             :game="getCurrentSchema()"
-            :type="'individual'"
+            :type="'equipment'"
             :id="formData.indivId"
             :img="formData.indivImg"
             @update:img="updateImg"
