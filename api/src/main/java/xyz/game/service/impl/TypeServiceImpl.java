@@ -37,7 +37,7 @@ public class TypeServiceImpl extends ServiceImpl<TypeMapper, Type> implements Ty
         if (StringUtils.hasText(keyword)) {
             queryWrapper.like(Type::getName, keyword)
                     .or()
-                    .like(Type::getDescription, keyword);
+                    .like(Type::getDescription, keyword).orderByAsc(Type::getId);
         }
         return this.list(queryWrapper);
     }
@@ -51,18 +51,18 @@ public class TypeServiceImpl extends ServiceImpl<TypeMapper, Type> implements Ty
     public boolean createType(Type type) {
         return this.save(type);
     }
-    
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean createTypeWithRelations(TypeDTO typeDTO) {
         Type type = typeDTO.getType();
-        
+
         // 保存类型信息
         boolean saveResult = this.save(type);
         if (!saveResult) {
             return false;
         }
-        
+
         // 确保能获取到ID（MyBatis-Plus应该已自动回填ID）
         Long typeId = type.getId();
         if (typeId == null) {
@@ -77,7 +77,7 @@ public class TypeServiceImpl extends ServiceImpl<TypeMapper, Type> implements Ty
                 return true;
             }
         }
-        
+
         // 保存类型关系
         List<Long> parentTypeIds = typeDTO.getParentTypeIds();
         return saveTypeRelations(typeId, parentTypeIds);
@@ -87,7 +87,7 @@ public class TypeServiceImpl extends ServiceImpl<TypeMapper, Type> implements Ty
     public boolean updateType(Type type) {
         return this.updateById(type);
     }
-    
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean updateTypeWithRelations(TypeDTO typeDTO) {
@@ -96,13 +96,13 @@ public class TypeServiceImpl extends ServiceImpl<TypeMapper, Type> implements Ty
         if (!updateResult) {
             return false;
         }
-        
+
         // 更新类型关系：先删除所有关系，再重新建立关系
         Long typeId = typeDTO.getType().getId();
         LambdaQueryWrapper<TypeRelation> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(TypeRelation::getTypeId, typeId);
         typeRelationMapper.delete(wrapper);
-        
+
         // 保存新的类型关系
         return saveTypeRelations(typeId, typeDTO.getParentTypeIds());
     }
@@ -122,7 +122,7 @@ public class TypeServiceImpl extends ServiceImpl<TypeMapper, Type> implements Ty
         // 删除类型
         return this.removeById(id);
     }
-    
+
     /**
      * 保存类型关系
      */
@@ -131,29 +131,29 @@ public class TypeServiceImpl extends ServiceImpl<TypeMapper, Type> implements Ty
         if (typeId == null) {
             return false;
         }
-        
+
         // 如果父类型ID列表为空，直接返回成功
         if (CollectionUtils.isEmpty(parentTypeIds)) {
             return true;
         }
-        
+
         List<TypeRelation> relations = new ArrayList<>();
         for (Long parentId : parentTypeIds) {
             // 跳过无效ID或自引用
             if (parentId == null || typeId.equals(parentId)) {
                 continue;
             }
-            
+
             TypeRelation relation = new TypeRelation();
             relation.setTypeId(typeId);
             relation.setParentTypeId(parentId);
             relations.add(relation);
         }
-        
+
         if (relations.isEmpty()) {
             return true;
         }
-        
+
         // 批量插入关系
         for (TypeRelation relation : relations) {
             try {
@@ -166,11 +166,11 @@ public class TypeServiceImpl extends ServiceImpl<TypeMapper, Type> implements Ty
                 }
             } catch (Exception e) {
                 // 忽略数据库约束错误，保证幂等性
-                log.error("保存类型关系失败: typeId={}, parentTypeId={}, 错误: {}", 
+                log.error("保存类型关系失败: typeId={}, parentTypeId={}, 错误: {}",
                         relation.getTypeId(), relation.getParentTypeId(), e.getMessage());
             }
         }
-        
+
         return true;
     }
 
@@ -190,7 +190,7 @@ public class TypeServiceImpl extends ServiceImpl<TypeMapper, Type> implements Ty
         if (typeId.equals(parentTypeId)) {
             return false;
         }
-        
+
         // 先检查是否已存在
         LambdaQueryWrapper<TypeRelation> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(TypeRelation::getTypeId, typeId)
@@ -198,7 +198,7 @@ public class TypeServiceImpl extends ServiceImpl<TypeMapper, Type> implements Ty
         if (typeRelationMapper.selectCount(queryWrapper) > 0) {
             return true; // 关系已存在
         }
-        
+
         TypeRelation relation = new TypeRelation();
         relation.setTypeId(typeId);
         relation.setParentTypeId(parentTypeId);
@@ -212,4 +212,4 @@ public class TypeServiceImpl extends ServiceImpl<TypeMapper, Type> implements Ty
                 .eq(TypeRelation::getParentTypeId, parentTypeId);
         return typeRelationMapper.delete(queryWrapper) > 0;
     }
-} 
+}

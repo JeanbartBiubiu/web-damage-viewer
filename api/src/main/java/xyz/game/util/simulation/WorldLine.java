@@ -156,13 +156,14 @@ public class WorldLine {
         if (doing.getCondition() != null && !evaluateCondition(doing.getCondition(), owner)) {
             return;
         }
-
+        /*
         // 执行变更
-        if (doing.getChangeThing() != null) {
+        if (doing.get() != null) {
             for (String change : doing.getChangeThing()) {
                 executeChange(change, owner);
             }
         }
+        */
     }
 
     /**

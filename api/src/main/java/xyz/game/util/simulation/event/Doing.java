@@ -3,6 +3,7 @@ package xyz.game.util.simulation.event;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 public class Doing {
@@ -13,16 +14,21 @@ public class Doing {
    */
   private String condition;
 
-  /**
-   * 跟condition类似，但是改变值要用 dicr或者incr
-   * 有持续时间的需要额外携带持续时间参数，永久效果的默认为-1
-   */
-  private List<String> changeThing;
+  private List<String> dicrThing;
+  private List<String> incrThing;
 
-  public boolean isConditionMet() {
-    // 简单实现，实际中可能需要更复杂的逻辑
-    return condition == null || condition.isEmpty();
-  }
+  /**
+   * 物理伤害、魔法伤害、治疗效果、移速降低、最大生命值减少、最大生命值增加等等，不同的类型对应不同的计算公式，注意要跟condition区分开
+   * 例如物理伤害对应的物理伤害计算公式、魔法伤害对应的魔法伤害计算公式、治疗效果对应的治疗效果计算公式、真实伤害也可能有系数需要乘
+   * 暴击也根据type选择不同的公式处理
+   * 友方技能还是敌方技能
+   * 全体还是非全体等等
+   */
+  private Set<Integer> types;
+
+  // 订阅事件 触发护甲减少、攻击特效、装备效果等等；顺序：before->this->after
+  private List<BaseEvent> subBeforeEvents;
+  private List<BaseEvent> subAfterEvents;
 
   /**
    * 评估条件表达式并返回最终结果
@@ -245,6 +251,7 @@ public class Doing {
       // 尝试解析为数值或其他计算表达式
       try {
         // 简单的数值解析，实际可能需要更复杂的表达式计算
+        // todo +-*/等等，可能要引入别的框架
         if (expression.contains("+")) {
           String[] addParts = expression.split("\\+");
           int sum = 0;
